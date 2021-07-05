@@ -46,7 +46,7 @@ object Search {
           .composeChanges(_.debounce(debounce))
       else searchBox._1.combineWith(checkBox._1)
 
-      val allSuggestions: EventStream[Seq[String]] = RouteApi.simpleRoute(SuggestionRoutes.allSuggestions) 
+    val allSuggestions: EventStream[Seq[String]] = RouteApi.simpleRoute(SuggestionRoutes.allSuggestions) 
 
     val ajaxS = debounced.map{case(s,b) => RouteApi.simpleRoute(SuggestionRoutes.filterSuggestions, 
         data=GetSuggestions.MyRequest(s, Some(b)))
@@ -61,7 +61,7 @@ object Search {
     }
 
     val results =
-      div(idAttr := "results", child <-- asDomNode)
+    div(idAttr := "results", child <-- asDomNode)
 
     div(
       h1("Searchy Bit"),

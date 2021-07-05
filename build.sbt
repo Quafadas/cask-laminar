@@ -1,7 +1,7 @@
 import org.scalajs.linker.interface.ModuleInitializer
 Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {    
-  val Scala      = "2.13.5"
+  val Scala      = "2.13.6"
   val ScalaGroup = "2.13"
   val organiseImports  = "0.5.0"
 }

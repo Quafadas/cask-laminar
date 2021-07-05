@@ -16,8 +16,8 @@ paramReader: Option[String => D] = None)
  }
 
  object SuggestionRoutes{
-    def allSuggestions = Route[Seq[String], Nothing]("/get-suggestions", "get", read[Seq[String]](_:String), SeqLikeWriter( StringWriter ))
-    def filterSuggestions = Route[Seq[String], GetSuggestions.MyRequest]("/get-suggestions", "post", read[Seq[String]](_:String), SeqLikeWriter( StringWriter ), Some(read[GetSuggestions.MyRequest](_:String)))
+    val allSuggestions = Route[Seq[String], Nothing]("/get-suggestions", "get", read[Seq[String]](_:String), SeqLikeWriter( StringWriter ))
+    val filterSuggestions = Route[Seq[String], GetSuggestions.MyRequest]("/get-suggestions", "post", read[Seq[String]](_:String), SeqLikeWriter( StringWriter ), Some(read[GetSuggestions.MyRequest](_:String)))
  }
 
 case class Todos(todoId: Int, description: String, completed: Boolean)

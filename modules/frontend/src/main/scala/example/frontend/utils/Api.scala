@@ -106,7 +106,7 @@ trait RouteApiT {
       headers: Map[String, String] = Map.empty,
       withCredentials: Boolean = false,
       responseType: String = "",
-      isStatusCodeSuccess: Int => Boolean = {_:Int => true},
+      isStatusCodeSuccess: Int => Boolean = { (_:Int) => true},
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
       progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty  
