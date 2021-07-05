@@ -1,54 +1,43 @@
-val V = new {
-  val Scala      = "2.13.4"
+import org.scalajs.linker.interface.ModuleInitializer
+Global / onChangedBuildSource := ReloadOnSourceChanges
+val V = new {    
+  val Scala      = "2.13.5"
   val ScalaGroup = "2.13"
-
-  val cats             = "2.4.1"
-  val laminar          = "0.13.0-M1"
-  val http4s           = "0.21.19"
-  val sttp             = "2.2.9"
-  val circe            = "0.13.0"
-  val decline          = "1.3.0"
   val organiseImports  = "0.5.0"
-  val betterMonadicFor = "0.3.1"
-  val weaver           = "0.6.0-M6"
 }
 
 scalaVersion := V.Scala
 
 val Dependencies = new {
-  private val http4sModules =
-    Seq("dsl", "blaze-client", "blaze-server", "circe").map("http4s-" + _)
-
-  private val sttpModules = Seq("core", "circe")
 
   lazy val frontend = Seq(
-    libraryDependencies ++=
-      sttpModules.map("com.softwaremill.sttp.client" %%% _         % V.sttp) ++
-        Seq("com.raquo"                              %%% "laminar" % V.laminar)
+    libraryDependencies ++=      
+        Seq("com.raquo" %%% "laminar" % "0.13.0")    
   )
 
   lazy val backend = Seq(
-    libraryDependencies ++=
-      http4sModules.map("org.http4s" %% _         % V.http4s) ++
-        Seq("com.monovore"           %% "decline" % V.decline)
+    libraryDependencies += "com.lihaoyi" %% "cask" % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
+    libraryDependencies += "io.getquill"%% "quill-jdbc"%"3.4.10", // DB lib - https://getquill.io
+    libraryDependencies +="org.postgresql"%"postgresql" % "42.2.8", // Postgres driver, note the single %
+    libraryDependencies += "org.ekrich" %% "sconfig" % "1.4.2", // config - https://github.com/ekrich/sconfig
+    libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.5" // simple http library   
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "io.circe" %%% "circe-generic" % V.circe
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "1.4.0" // for parsing things
   )
 
   lazy val tests = Def.settings(
-    libraryDependencies += "com.disneystreaming" %%% "weaver-cats" % V.weaver % Test,
-    testFrameworks += new TestFramework("weaver.framework.CatsEffect")
+    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.10" % Test
   )
 }
 
 inThisBuild(
   Seq(
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
-    semanticdbEnabled := true,
+/*     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
-    scalafixScalaBinaryVersion := V.ScalaGroup
+ */    scalafixScalaBinaryVersion := V.ScalaGroup
   )
 )
 
@@ -57,12 +46,26 @@ lazy val root =
 
 lazy val frontend = (project in file("modules/frontend"))
   .dependsOn(shared.js)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(scalaJSUseMainModuleInitializer := true)
+  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
   .settings(
+    Compile / npmDependencies += "vega-embed" -> "6.18.2",
+    Compile / npmDependencies += "vega" -> "5.19.1",
+    Compile / npmDependencies += "vega-lite" -> "4.17.0",
+    Compile / npmDependencies += "vega-view" -> "5.10.1",
+
+    //scalaJSUseMainModuleInitializer := true,
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
+     Compile / scalaJSModuleInitializers  += {
+      ModuleInitializer.mainMethod("example.frontend.Todo", "main").withModuleID("Todo")      
+    },
+/*     Compile / scalaJSModuleInitializers  += {
+      ModuleInitializer.mainMethod("example.frontend.Search", "renderApp").withModuleID("Search")
+    }, */
     Dependencies.frontend,
     Dependencies.tests,
-    Test / jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+    requireJsDomEnv := true,
+    testFrameworks += new TestFramework("utest.runner.Framework"),
+    
   )
   .settings(commonBuildSettings)
 
@@ -72,18 +75,19 @@ lazy val backend = (project in file("modules/backend"))
   .settings(Dependencies.tests)
   .settings(commonBuildSettings)
   .enablePlugins(JavaAppPackaging)
-  .enablePlugins(DockerPlugin)
+  .enablePlugins(DockerPlugin)  
   .settings(
-    Test / fork := true,
+    Test / fork := false,
     Universal / mappings += {
       val appJs = (frontend / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
     Universal  / javaOptions ++= Seq(
-      "--port 8080",
-      "--mode prod"
+/*       "--port 8080",
+      "--mode prod" */
     ),
-     Docker / packageName := "laminar-http4s-example"
+     Docker / packageName := "laminar-cask",
+     testFrameworks += new TestFramework("example.backend.WithDbFramework")
   )
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
@@ -93,17 +97,22 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .jsSettings(Dependencies.shared)
   .jsSettings(commonBuildSettings)
   .jvmSettings(commonBuildSettings)
+  .jsConfigure { project => project.enablePlugins(ScalaJSBundlerPlugin) }
 
-lazy val fastOptCompileCopy = taskKey[Unit]("")
+lazy val fastLinkCompileCopy = taskKey[Unit]("")
 
-val jsPath = "modules/backend/src/main/resources"
+val jsPath = "modules/backend/src/main/resources/assets/js"
 
-fastOptCompileCopy := {
-  val source = (frontend / Compile / fastOptJS).value.data
-  IO.copyFile(
-    source,
-    baseDirectory.value / jsPath / "dev.js"
-  )
+fastLinkCompileCopy := {  
+  val files = (webpack in (frontend , Compile, fastOptJS)).value  
+
+  files.foreach{f => 
+    IO.copyFile(
+      f.data,
+      baseDirectory.value / jsPath / f.data.name
+    )
+  }
+  //println(files)
 }
 
 lazy val fullOptCompileCopy = taskKey[Unit]("")
@@ -118,14 +127,13 @@ fullOptCompileCopy := {
 }
 
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
-  scalaVersion := V.Scala,
-  addCompilerPlugin("com.olegpy" %% "better-monadic-for" % V.betterMonadicFor),
+  scalaVersion := V.Scala,  
   scalacOptions ++= Seq(
     "-Ywarn-unused"
   )
 )
 
-addCommandAlias("runDev", ";fastOptCompileCopy; backend/reStart --mode dev")
+addCommandAlias("runDev", ";fastLinkCompileCopy; backend/reStart --mode dev")
 addCommandAlias("runProd", ";fullOptCompileCopy; backend/reStart --mode prod")
 
 val scalafixRules = Seq(

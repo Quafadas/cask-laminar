@@ -1,0 +1,35 @@
+GET http://localhost:8080/api/todo HTTP/1.1
+
+###
+GET http://localhost:8080/api/todo HTTP/1.1
+
+###
+GET http://localhost:8080/api/todo/4 HTTP/1.1
+
+###
+
+PUT http://localhost:8080/api/todo HTTP/1.1
+
+{
+    "description":"profit",
+    "completed":false
+}
+
+###
+POST http://localhost:8080/api/todo HTTP/1.1
+
+{   
+    "todoId" : 12,
+    "completed":false,
+    "description":"more profit"
+}
+
+###
+
+DELETE http://localhost:8080/api/todo/4 HTTP/1.1
+
+###
+
+DELETE http://localhost:8080/api/todo/:id HTTP/1.1
+
+###

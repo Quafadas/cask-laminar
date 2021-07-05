@@ -1,16 +1,30 @@
 package example.shared
 
-object Protocol {
+import upickle.default._
+
+// scala 2
   object GetSuggestions {
 
-    case class Request(search: String, prefixOnly: Option[Boolean] = None)
-    object Request {
-      implicit val codec = io.circe.generic.semiauto.deriveCodec[Request]
+    case class MyRequest(search: String, prefixOnly: Option[Boolean] = None)
+    object MyRequest {
+      implicit val codec2: ReadWriter[MyRequest] = macroRW[MyRequest]
     }
 
-    case class Response(suggestions: Seq[String])
-    object Response {
-      implicit val codec = io.circe.generic.semiauto.deriveCodec[Response]
+    case class MyResponse(suggestions: Seq[String])
+    object MyResponse {
+      implicit val codec2: ReadWriter[MyResponse] = macroRW[MyResponse]
     }
   }
-}
+
+
+
+// scala 3
+//object Protocol {
+//  object GetSuggestions {
+//
+//    case class MyRequest(search: String, prefixOnly: Option[Boolean] = None) derives Reader, Writer
+//
+//    case class MyResponse(suggestions: Seq[String]) derives Reader, Writer
+//  }
+//}
+//

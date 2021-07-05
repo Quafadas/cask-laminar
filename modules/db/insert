@@ -1,0 +1,2 @@
+INSERT INTO todos (description,completed)
+            VALUES ('something', false)

@@ -24,3 +24,5 @@ modules/backend/src/main/resources/prod.js
 node_modules
 package.json
 yarn.lock
+modules/backend/src/main/resources/assets/js/frontend-fastopt-bundle.js
+modules/backend/src/main/resources/assets/js/frontend-fastopt-bundle.js.map
