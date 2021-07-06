@@ -44,6 +44,17 @@ class WithDbFramework extends utest.runner.Framework {
 
     val conn      = pgDataSource.getConnection()
     val statement = conn.createStatement()
+    val statement2 = conn.createStatement()
+
+    val createTable = Try {
+      statement2.executeUpdate(
+        s"""CREATE TABLE IF NOT EXISTS todos (
+            todo_id serial primary KEY,
+            description text not null, 
+            completed boolean not null
+        );"""
+      )
+    }
     val truncateTable = Try {
       statement.executeUpdate(
         s"truncate table todos;"
