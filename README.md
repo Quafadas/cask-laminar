@@ -9,6 +9,8 @@ Example of laminar put on top of the so called "Singaporean stack". The aim is s
 - JSON API
 - Shared client / server code
 
+The choices of this project...
+
 1. Client written with [Laminar](https://github.com/raquo/Laminar), interacting with server using laminars native Ajax integration
 
 2. Server with [cask](https://com-lihaoyi.github.io/cask/) serving both the compiled Javascript for the client and the classic CRUD api for server-side interactions for simple deployment / development

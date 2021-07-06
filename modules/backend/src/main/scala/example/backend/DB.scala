@@ -5,30 +5,37 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import org.ekrich.config.Config
 
 class DB(conf: Config) {
-           
-    val pgDataSource = new org.postgresql.ds.PGSimpleDataSource()
-    pgDataSource.setUser(conf.getString("db.dbuser") )
-    pgDataSource.setDatabaseName(conf.getString("db.dbname") )
-    pgDataSource.setPassword(conf.getString("db.password") )
-    pgDataSource.setServerName(conf.getString("db.servername"))
-    pgDataSource.setPortNumber(conf.getInt("db.port") )
 
-    val config = new HikariConfig()
-    config.setDataSource(pgDataSource)
+  val pgDataSource = new org.postgresql.ds.PGSimpleDataSource()
+  pgDataSource.setUser(conf.getString("db.dbuser"))
+  pgDataSource.setDatabaseName(conf.getString("db.dbname"))
+  pgDataSource.setPassword(conf.getString("db.password"))
+  pgDataSource.setServerName(conf.getString("db.servername"))
+  pgDataSource.setPortNumber(conf.getInt("db.port"))
 
-    val ctx = new PostgresJdbcContext(SnakeCase, new HikariDataSource(config))
-    import ctx._ 
+  val config = new HikariConfig()
+  config.setDataSource(pgDataSource)
 
-    def allTodos() = ctx.run{query[Todos]}
+  val ctx = new PostgresJdbcContext(SnakeCase, new HikariDataSource(config))
+  import ctx._
 
-    def aTodo(id: Int) = ctx.run{query[Todos].filter(_.todoId == lift(id))}
+  def allTodos() = ctx.run { query[Todos] }
 
-    def addTodo(todo: Todos) = ctx.run{ query[Todos].insert(lift(todo)).onConflictIgnore(_.todoId).returningGenerated(_.todoId) }
+  def aTodo(id: Int) = ctx.run { query[Todos].filter(_.todoId == lift(id)) }
 
-    def updateTodo(todo: Todos) = ctx.run{ query[Todos].filter(_.todoId == lift(todo.todoId)).update(lift(todo)) }
+  def addTodo(todo: Todos) = ctx.run {
+    query[Todos]
+      .insert(lift(todo))
+      .onConflictIgnore(_.todoId)
+      .returningGenerated(_.todoId)
+  }
 
-    def deleteTodo(id: Int) = ctx.run{query[Todos].filter(_.todoId == lift(id)).delete}
+  def updateTodo(todo: Todos) = ctx.run {
+    query[Todos].filter(_.todoId == lift(todo.todoId)).update(lift(todo))
+  }
 
-    
+  def deleteTodo(id: Int) = ctx.run {
+    query[Todos].filter(_.todoId == lift(id)).delete
+  }
 
 }

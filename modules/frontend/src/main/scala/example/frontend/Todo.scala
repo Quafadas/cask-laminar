@@ -15,8 +15,6 @@ import webcomponents.vega.VegaView
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.scalajs.js.annotation.JSExportAll
 
-
-
 object Todo {
 
   val ApiHost = example.api.ApiHost
@@ -34,7 +32,6 @@ object Todo {
 
     val filters: List[Filter] = ShowAll :: ShowActive :: ShowCompleted :: Nil
 
-
     sealed trait Command
 
     case class Create(itemText: String) extends Command
@@ -47,47 +44,63 @@ object Todo {
 
     case object DeleteCompleted extends Command
 
-
     // --- Server / State Sync helpers ---
     // This gets called a lot in order to retrieve server items and map into itemVar. Inefficient from a networking perspective!
-    def updateState(): EventStream[Seq[Todos]] = RouteApi.simpleRoute(TodoRoutes.listAllTodos).map(_.sortBy(_.todoId)) 
-    private val itemsVar : Var[Seq[Todos]] = Var( Seq[Todos]() )
-    
-    def deleteStream(itemId: Int): EventStream[Int] = RouteApi.pathSegmentedRoute(TodoRoutes.deleteTodo, None){(s:String) => s.replace(":id", itemId.toString())}
-    def updateItem(todo: Todos) = RouteApi.simpleRoute(TodoRoutes.updateTodo, data=todo)
-    def createItemUpdateState(desc: String) = RouteApi.simpleRoute(TodoRoutes.newTodo, data= NoIdTodo(desc, false) ).flatMap(_ => updateState())
-    def updateStateFromStream(inStream:EventStream[_]) = inStream.flatMap(_ => updateState())
+    def updateState(): EventStream[Seq[Todos]] =
+      RouteApi.simpleRoute(TodoRoutes.listAllTodos).map(_.sortBy(_.todoId))
+    private val itemsVar: Var[Seq[Todos]] = Var(Seq[Todos]())
 
-  // When building up streams, I unashamedly mapped them into these temporary observers... 
-  /*  private val testVarString : Var[String] = Var( "")  
-    private val testVarNoIdToDo: Var[NoIdTodo] = Var( NoIdTodo("", false) )  
+    def deleteStream(itemId: Int): EventStream[Int] =
+      RouteApi.pathSegmentedRoute(TodoRoutes.deleteTodo, None) { (s: String) =>
+        s.replace(":id", itemId.toString())
+      }
+    def updateItem(todo: Todos) =
+      RouteApi.simpleRoute(TodoRoutes.updateTodo, data = todo)
+    def createItemUpdateState(desc: String) = RouteApi
+      .simpleRoute(TodoRoutes.newTodo, data = NoIdTodo(desc, false))
+      .flatMap(_ => updateState())
+    def updateStateFromStream(inStream: EventStream[_]) =
+      inStream.flatMap(_ => updateState())
+
+    // When building up streams, I unashamedly mapped them into these temporary observers...
+    /*  private val testVarString : Var[String] = Var( "")
+    private val testVarNoIdToDo: Var[NoIdTodo] = Var( NoIdTodo("", false) )
     private val testVarInt: Var[Int] = Var(0 )
     private val testVarSInt: Var[Seq[Int]] = Var(Seq(0) )
-  */
+     */
 
     private val filterVar = Var[Filter](ShowAll)
     // Data Viz machinery
-      val config = JSON.parse("""{"logLevel": 0}""")    
+    val config = JSON.parse("""{"logLevel": 0}""")
 
-    // This signal comes from a JS Promise... that's nice for third party integration.    
-    val vizDivPieClass = "vizPie"    
-    val pieStream: Signal[Option[Dynamic]] = EventStream.fromJsPromise(VegaEmbed.embed(s"#$vizDivPieClass", JSON.parse(example.frontend.viz.Pie.pieSpec), config)).toWeakSignal
-    val managePieViewObj = pieStream.map{_.map(_.view.asInstanceOf[VegaView])}
+    // This signal comes from a JS Promise... that's nice for third party integration.
+    val vizDivPieClass = "vizPie"
+    val pieStream: Signal[Option[Dynamic]] = EventStream
+      .fromJsPromise(
+        VegaEmbed.embed(
+          s"#$vizDivPieClass",
+          JSON.parse(example.frontend.viz.Pie.pieSpec),
+          config
+        )
+      )
+      .toWeakSignal
+    val managePieViewObj = pieStream.map {
+      _.map(_.view.asInstanceOf[VegaView])
+    }
     val updatePieVizStream = managePieViewObj.combineWith(itemsVar.signal)
     // --- Views ---
     lazy val node: HtmlElement = {
 
-
-    val $todoItems: Signal[Seq[Todos]] = itemsVar.signal
-          .combineWith(filterVar.signal)
-          .mapN(_ filter _.passes)
+      val $todoItems: Signal[Seq[Todos]] = itemsVar.signal
+        .combineWith(filterVar.signal)
+        .mapN(_ filter _.passes)
       div(
-        cls("todoapp"),      
+        cls("todoapp"),
         div(
           cls("header"),
           h1("todos"),
-          renderNewTodoInput,
-        ),      
+          renderNewTodoInput
+        ),
         div(
           hideIfNoItems,
           cls("main"),
@@ -96,131 +109,154 @@ object Todo {
             children <-- $todoItems.split(_.todoId)(renderTodoItem)
           )
         ),
-        renderStatusBar,      
-        updateState() --> itemsVar.writer, 
+        renderStatusBar,
+        updateState() --> itemsVar.writer,
         renderViz()
       )
     }
 
     private def renderViz(): ReactiveHtmlElement[org.scalajs.dom.html.Div] = {
-        div( 
-          idAttr := vizDivPieClass,         
-          updatePieVizStream.signal --> ( 
-            {
-              case(view, value) => {                                              
-                val words = value.groupBy(_.completed)
-                dom.console.log(words)
+      div(
+        idAttr := vizDivPieClass,
+        updatePieVizStream.signal --> ({
+          case (view, value) => {
+            val words = value.groupBy(_.completed)
+            dom.console.log(words)
 
-                val arrayData = scala.scalajs.js.Array[scala.scalajs.js.Object]()
-                words.toVector.map{
-                  case(completed, items) => {
-                    val temp = (completed, items) match {
-                      case (true, items) => Dynamic.literal(field = items.length, id ="completed")
-                      case (false, items) => Dynamic.literal(field = items.length, id = "open")
-                    }
-                    arrayData.push(temp)
-                  }
+            val arrayData = scala.scalajs.js.Array[scala.scalajs.js.Object]()
+            words.toVector.map {
+              case (completed, items) => {
+                val temp = (completed, items) match {
+                  case (true, items) =>
+                    Dynamic.literal(field = items.length, id = "completed")
+                  case (false, items) =>
+                    Dynamic.literal(field = items.length, id = "open")
                 }
-
-                dom.console.log(arrayData)
-                view match {
-                  case Some(view) => 
-                    view.data("table", arrayData)
-                    view.runAsync() 
-                  case _ => ()
-                }       
+                arrayData.push(temp)
               }
             }
-          ) 
-        )
-    } 
-  
-    private def renderNewTodoInput: ReactiveHtmlElement[org.scalajs.dom.html.Input] =
+
+            dom.console.log(arrayData)
+            view match {
+              case Some(view) =>
+                view.data("table", arrayData)
+                view.runAsync()
+              case _ => ()
+            }
+          }
+        })
+      )
+    }
+
+    private def renderNewTodoInput
+        : ReactiveHtmlElement[org.scalajs.dom.html.Input] =
       input(
         cls("new-todo"),
         placeholder("What needs to be done?"),
-        autoFocus(true),      
+        autoFocus(true),
         inContext { thisNode =>
-            composeEvents(onEnterPress)(_.mapTo(thisNode.ref.value).filter(_.nonEmpty).flatMap(s => 
-              createItemUpdateState(s))) --> itemsVar.writer.contramap[Seq[Todos]]{
-              s => thisNode.ref.value = ""; s 
-            }
+          composeEvents(onEnterPress)(
+            _.mapTo(thisNode.ref.value)
+              .filter(_.nonEmpty)
+              .flatMap(s => createItemUpdateState(s))
+          ) --> itemsVar.writer.contramap[Seq[Todos]] { s =>
+            thisNode.ref.value = ""; s
+          }
         }
       )
 
     // Render a single item. Note that the result is a single element: not a stream, not some virtual DOM representation.
-    private def renderTodoItem(itemId: Int, initialTodo: Todos, $item: Signal[Todos]): HtmlElement = {
-      val isEditingVar = Var(false) // Example of local state         
-      val editVar = Var("")
+    private def renderTodoItem(
+        itemId: Int,
+        initialTodo: Todos,
+        $item: Signal[Todos]
+    ): HtmlElement = {
+      val isEditingVar = Var(false) // Example of local state
+      val editVar      = Var("")
 
       li(
         cls <-- $item.map(item => Map("completed" -> item.completed)),
-        onDblClick.filter(_ => !isEditingVar.now()).mapTo(true) --> isEditingVar.writer,
+        onDblClick
+          .filter(_ => !isEditingVar.now())
+          .mapTo(true) --> isEditingVar.writer,
         $item.map(_.description) --> editVar.writer,
         children <-- isEditingVar.signal.map[List[HtmlElement]] {
           case true => {
-            renderTextUpdateInput(itemId, $item, isEditingVar.writer, editVar) :: Nil
+            renderTextUpdateInput(
+              itemId,
+              $item,
+              isEditingVar.writer,
+              editVar
+            ) :: Nil
           }
           case false =>
-            List(            
+            List(
               renderCheckboxInput(itemId, $item),
               label(child.text <-- editVar),
-              // This 
+              // This
               button(
                 cls("destroy"),
-                composeEvents(onClick)(_.flatMap(_ => deleteStream(itemId)).flatMap(_ => updateState())) --> itemsVar.writer                           
+                composeEvents(onClick)(
+                  _.flatMap(_ => deleteStream(itemId)).flatMap(_ =>
+                    updateState()
+                  )
+                ) --> itemsVar.writer
               )
             )
-          }
-        )
+        }
+      )
     }
 
     // Note that we pass reactive variables: `$item` for reading, `updateTextObserver` for writing
     private def renderTextUpdateInput(
-      itemId: Int,
-      $item: Signal[Todos],
-      isEditingObserver: Observer[Boolean], 
-      editVar: Var[String]
-    ): ReactiveHtmlElement[org.scalajs.dom.html.Input] = {    
+        itemId: Int,
+        $item: Signal[Todos],
+        isEditingObserver: Observer[Boolean],
+        editVar: Var[String]
+    ): ReactiveHtmlElement[org.scalajs.dom.html.Input] = {
       input(
-        cls("edit"),       
+        cls("edit"),
         onMountFocus,
         controlled(
           value <-- editVar,
           onInput.mapToValue.filter(!_.isEmpty()) --> editVar
         ),
-
-        composeEvents(onEnterPress)(_.mapTo{
-            println("enter pressed")
-            val temp: Todos = itemsVar.now().filter(_.todoId == itemId).head          
-            temp.copy(description = editVar.now())
-          }.filter(_.description.nonEmpty).flatMap{s =>          
-            updateStateFromStream(updateItem(s))}
-        ) --> itemsVar.writer
-        ,
+        composeEvents(onEnterPress)(_.mapTo {
+          println("enter pressed")
+          val temp: Todos = itemsVar.now().filter(_.todoId == itemId).head
+          temp.copy(description = editVar.now())
+        }.filter(_.description.nonEmpty).flatMap { s =>
+          updateStateFromStream(updateItem(s))
+        }) --> itemsVar.writer,
         List(
           onEnterPress.mapTo(false) --> isEditingObserver,
           onBlur.mapTo(false) --> isEditingObserver
-        )       
+        )
       )
     }
 
-    private def renderCheckboxInput(itemId: Int, $item: Signal[Todos]): ReactiveHtmlElement[org.scalajs.dom.html.Input] =
+    private def renderCheckboxInput(
+        itemId: Int,
+        $item: Signal[Todos]
+    ): ReactiveHtmlElement[org.scalajs.dom.html.Input] =
       input(
         cls("toggle"),
         typ("checkbox"),
         checked <-- $item.map(_.completed),
-        inContext { thisNode =>             
-          composeEvents(onInput)(_.mapTo{
-            val temp: Todos = itemsVar.now().filter(_.todoId == itemId).head
-            val new1: Todos = temp.copy(completed = thisNode.ref.checked)
-            new1 }
-            .flatMap((s: Todos) => updateStateFromStream(updateItem(s)))
-        ) --> itemsVar.writer
+        inContext { thisNode =>
+          composeEvents(onInput)(
+            _.mapTo {
+              val temp: Todos = itemsVar.now().filter(_.todoId == itemId).head
+              val new1: Todos = temp.copy(completed = thisNode.ref.checked)
+              new1
+            }
+              .flatMap((s: Todos) => updateStateFromStream(updateItem(s)))
+          ) --> itemsVar.writer
         }
       )
 
-    private def renderStatusBar: ReactiveHtmlElement[org.scalajs.dom.html.Element] =
+    private def renderStatusBar
+        : ReactiveHtmlElement[org.scalajs.dom.html.Element] =
       footer(
         hideIfNoItems,
         cls("footer"),
@@ -228,29 +264,41 @@ object Todo {
           cls("todo-count"),
           child.text <-- itemsVar.signal
             .map(_.count(!_.completed))
-            .map(pluralize(_, "item left", "items left")),
+            .map(pluralize(_, "item left", "items left"))
         ),
         ul(
           cls("filters"),
           filters.map(filter => li(renderFilterButton(filter)))
         ),
         child.maybe <-- itemsVar.signal.map { items =>
-          if (items.exists(ShowCompleted.passes)) Some(
-            button(
-              cls("clear-completed"),
-              "Clear completed",            
-                composeEvents(onClick)(_.map(_ => 
-                  itemsVar.now().filter(_.completed)
-                  .map(_.todoId))
-                  .map{s => println(s); s.map(deleteStream(_)) }
-                  .flatMap{(something: Seq[EventStream[Int]]) => EventStream.sequence(something).flatMap(_ => updateState())}                
+          if (items.exists(ShowCompleted.passes))
+            Some(
+              button(
+                cls("clear-completed"),
+                "Clear completed",
+                composeEvents(onClick)(
+                  _.map(_ =>
+                    itemsVar
+                      .now()
+                      .filter(_.completed)
+                      .map(_.todoId)
+                  )
+                    .map { s => println(s); s.map(deleteStream(_)) }
+                    .flatMap { (something: Seq[EventStream[Int]]) =>
+                      EventStream
+                        .sequence(something)
+                        .flatMap(_ => updateState())
+                    }
                 ) --> itemsVar.writer
+              )
             )
-          ) else None
+          else None
         }
       )
 
-    private def renderFilterButton(filter: Filter): ReactiveHtmlElement[org.scalajs.dom.html.Anchor] =
+    private def renderFilterButton(
+        filter: Filter
+    ): ReactiveHtmlElement[org.scalajs.dom.html.Anchor] =
       a(
         cls.toggle("selected") <-- filterVar.signal.map(_ == filter),
         onClick.preventDefault.mapTo(filter) --> filterVar.writer,
@@ -268,7 +316,8 @@ object Todo {
     private def pluralize(num: Int, singular: String, plural: String): String =
       s"$num ${if (num == 1) singular else plural}"
 
-    private val onEnterPress = onKeyPress.filter(_.keyCode == dom.ext.KeyCode.Enter)
+    private val onEnterPress =
+      onKeyPress.filter(_.keyCode == dom.ext.KeyCode.Enter)
   }
 
   //@JSExportTopLevel(name = "start", moduleID = "todo")
@@ -277,5 +326,5 @@ object Todo {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), TodoMvcApp.node)
     }(unsafeWindowOwner)
-  }  
+  }
 }

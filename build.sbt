@@ -147,6 +147,7 @@ val scalafixRules = Seq(
 val CICommands = Seq(
   "clean",
   "backend/compile",
+  "backend/test",
   "todo/test",
   "todo/compile",
   "todo/fastOptJS/webpack",

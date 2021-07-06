@@ -1,7 +1,7 @@
 package example.frontend.viz
 
 object Pie {
-    val pieSpec: String = """
+  val pieSpec: String = """
   {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "A basic pie chart example.",

@@ -15,31 +15,34 @@ object Search {
   val ApiHost = example.api.ApiHost
 
   val searchBox = {
-    val zipVar = Var("")
-    val zipValueSignal = zipVar.signal
+    val zipVar           = Var("")
+    val zipValueSignal   = zipVar.signal
     val zipValueObserver = zipVar.writer
-    (zipValueSignal, input(
-      placeholder := "Search something: ",
-      controlled(
-        value <-- zipValueSignal,
-        onInput.mapToValue --> zipValueObserver
-      )
-    ))
-  }
-
-  val checkBox = {
-    val checkVar = Var(true)    
     (
-      checkVar, 
-      input( 
-          typ := "checkbox", 
-          defaultChecked := checkVar.now(),
-          onInput.mapToChecked --> checkVar
+      zipValueSignal,
+      input(
+        placeholder := "Search something: ",
+        controlled(
+          value <-- zipValueSignal,
+          onInput.mapToValue --> zipValueObserver
+        )
       )
     )
   }
 
-  def app(debounce: Int = 250) = {        
+  val checkBox = {
+    val checkVar = Var(true)
+    (
+      checkVar,
+      input(
+        typ := "checkbox",
+        defaultChecked := checkVar.now(),
+        onInput.mapToChecked --> checkVar
+      )
+    )
+  }
+
+  def app(debounce: Int = 250) = {
 
     val debounced: Signal[(String, Boolean)] =
       if (debounce > 0)
@@ -48,22 +51,26 @@ object Search {
           .composeChanges(_.debounce(debounce))
       else searchBox._1.combineWith(checkBox._1)
 
-    val allSuggestions: EventStream[Seq[String]] = RouteApi.simpleRoute(SuggestionRoutes.allSuggestions) 
+    val allSuggestions: EventStream[Seq[String]] =
+      RouteApi.simpleRoute(SuggestionRoutes.allSuggestions)
 
-    val ajaxS = debounced.map{case(s,b) => RouteApi.simpleRoute(SuggestionRoutes.filterSuggestions, 
-        data=GetSuggestions.MyRequest(s, Some(b)))
+    val ajaxS = debounced.map { case (s, b) =>
+      RouteApi.simpleRoute(
+        SuggestionRoutes.filterSuggestions,
+        data = GetSuggestions.MyRequest(s, Some(b))
+      )
     }.flatten
-    val asDomNode = ajaxS.map{
-      ls => div(ls.mkString(","))
-         ul(
-           for(l <- ls) yield {
-            li(l)
-          }
-       ) 
+    val asDomNode = ajaxS.map { ls =>
+      div(ls.mkString(","))
+      ul(
+        for (l <- ls) yield {
+          li(l)
+        }
+      )
     }
 
     val results =
-    div(idAttr := "results", child <-- asDomNode)
+      div(idAttr := "results", child <-- asDomNode)
 
     div(
       h1("Searchy Bit"),
@@ -72,11 +79,11 @@ object Search {
       results,
       h1("All suggestions"),
       div(
-        idAttr := "allS", child <-- allSuggestions.map{
-        list => 
+        idAttr := "allS",
+        child <-- allSuggestions.map { list =>
           ul(
-            for (item <- list) yield {li(item)}
-          )        
+            for (item <- list) yield { li(item) }
+          )
         }
       )
     )
