@@ -3,21 +3,21 @@
 Example of laminar put on top of the so called "Singaporean stack". The aim is simplicitly... as far as possible inside the requirements of; 
 - reload on (any) change
 - database access
-- UI Interactions on (multiple!?!) single page applications
-- Each with (potentially interactive!) data viz
-- zero complicated effect frameworks! No scalaz, no cats, no zio, in fact, no asynchrony at all!
+- Modern UI interactions
+- Data viz (interactive!)
+- Zero complicated effect frameworks! No scalaz, no cats, no zio, in fact, no asynchrony at all!
 - JSON API
 - Shared client / server code
 
-The choices of this project...
+The choices made...
 
-1. Client written with [Laminar](https://github.com/raquo/Laminar), interacting with server using laminars native Ajax integration
+1. Client written (ahem, stolen, thanks raquo) with [Laminar](https://github.com/raquo/Laminar), interacting with server using laminars native Ajax integration
 
 2. Server with [cask](https://com-lihaoyi.github.io/cask/) serving both the compiled Javascript for the client and the classic CRUD api for server-side interactions for simple deployment / development
 
-3. Routing is via a semi safe custom "API concept" - it's worked well for me. YMMV. Ideally, there would be tapir or endpoints4s... but none support cask... and so adding them forced added complexity.
+3. Routing is via a questionable semi safe custom API concept - it's worked well for me. YMMV. Ideally, there would be tapir or endpoints4s... but none support cask... adding them added complexity against the principle above.
 
-4. ScalaJS bundler for JS dependancies
+4. ScalaJS bundler for JS dependancies (Vega in this case)
 
 5. Database interactions via quill
 
@@ -28,6 +28,15 @@ The choices of this project...
 8. Client server parsing are via [upickle](https://www.lihaoyi.com/post/HowtoworkwithJSONinScala.html). Although this is largely abstracted away by the API - pattern match it! 
 
 9. Simple facades for Vega and Vega embed.
+
+## Further ideas
+1. Is it possible to publish multiple JS modules without a mass of SBT project boilerplate? Probably, it should be a homepage with links to different UIs. See laminar examples.
+2. Frontend testing is non-existent (!)
+3. Incorporate something from ScalabyTyped to prove the concept
+4. Scala 3 (wait for the genius maintainers of quill)
+
+## Credits
+This is nothing other than glue around the genius of others. Thankyou to the maintainers of all the libraries included here. They are great.
 
 ## Development mode
 
