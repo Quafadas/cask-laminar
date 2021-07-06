@@ -18,7 +18,7 @@ import scala.scalajs.js.annotation.JSExportAll
 
 
 object Todo {
-  
+
   val ApiHost = example.api.ApiHost
 
   // Shamlessly pilfered from Laminar docs
@@ -272,12 +272,10 @@ object Todo {
   }
 
   //@JSExportTopLevel(name = "start", moduleID = "todo")
-  @JSExportTopLevel(name = "renderApp", moduleID = "b")
-  def renderApp(): Unit = {
+  //@JSExportTopLevel(name = "renderApp", moduleID = "b")
+  def main(): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), TodoMvcApp.node)
     }(unsafeWindowOwner)
-  }
-
-  def main(): Unit = ()
+  }  
 }

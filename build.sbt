@@ -59,7 +59,7 @@ lazy val todo = (project in file("modules/frontend"))
     //scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
      Compile / scalaJSModuleInitializers  += {
-      ModuleInitializer.mainMethod("example.frontend.Todo", "main").withModuleID("b")
+      ModuleInitializer.mainMethod("example.frontend.Todo", "main").withModuleID("todo")
     },
     Dependencies.frontend,
     Dependencies.tests,
