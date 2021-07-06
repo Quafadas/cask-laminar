@@ -1,7 +1,7 @@
 # cask-laminar-stack
 
 Example of laminar put on top of the so called "Singaporean stack". The aim is simplicitly... as far as possible inside the requirements of; 
-- reload on change
+- reload on (any) change
 - database access
 - UI Interactions on (multiple!?!) single page applications
 - Each with (potentially interactive!) data viz
@@ -39,7 +39,7 @@ And open http://localhost:8080/
 
 This will restart the server on any changes: shared code, client/server, assets. You should see "hello" if the server is working. 
 
-Now you'll need a database. Have a look at the DB folder in modules and the "application.conf" file.
+Now you'll need a database. Have a look at the DB folder in modules and the "application.conf" file to wire up postgres.
 
 ## Tests
 It is a prerequisite to have jsdom installed, in order for the frontend tests to run. Proposal:
