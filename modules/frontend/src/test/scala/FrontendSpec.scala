@@ -1,9 +1,10 @@
 package example.frontend
 
-import scala.collection.mutable
+import utest.TestSuite
+import utest.Tests
 
-/* 
-object ClientSpec extends SimpleIOSuite with Harness {
+object ClientSpec extends TestSuite  {
+
+  override def tests: Tests = ???
 
 }
- */

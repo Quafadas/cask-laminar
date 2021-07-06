@@ -27,7 +27,7 @@ trait ServerT extends cask.Routes {
           
     lazy implicit val s :Writer[T] = routeDef.encoder
     def wrapFunction(ctx: cask.Request, delegate: Delegate) = {
-      delegate(Map()).map{num: T =>
+      delegate(Map()).map{(num: T) =>
          cask.Response(upickle.default.write(num))                
       }
     }

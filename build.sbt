@@ -19,8 +19,8 @@ val Dependencies = new {
     libraryDependencies += "com.lihaoyi" %% "cask" % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
     libraryDependencies += "io.getquill"%% "quill-jdbc"%"3.4.10", // DB lib - https://getquill.io
     libraryDependencies +="org.postgresql"%"postgresql" % "42.2.8", // Postgres driver, note the single %
-    libraryDependencies += "org.ekrich" %% "sconfig" % "1.4.2", // config - https://github.com/ekrich/sconfig
-    libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.5" // simple http library   
+    libraryDependencies += "org.ekrich" %% "sconfig" % "1.4.4", // config - https://github.com/ekrich/sconfig
+    libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.9" // simple http library   
   )
 
   lazy val shared = Def.settings(
@@ -41,10 +41,13 @@ inThisBuild(
   )
 )
 
-lazy val root =
-  (project in file(".")).aggregate(frontend, backend, shared.js, shared.jvm)
 
-lazy val frontend = (project in file("modules/frontend"))
+
+
+lazy val root =
+  (project in file(".")).aggregate(todo, backend, shared.js, shared.jvm)
+
+lazy val todo = (project in file("modules/frontend"))
   .dependsOn(shared.js)
   .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
   .settings(
@@ -56,16 +59,13 @@ lazy val frontend = (project in file("modules/frontend"))
     //scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
      Compile / scalaJSModuleInitializers  += {
-      ModuleInitializer.mainMethod("example.frontend.Todo", "main").withModuleID("Todo")      
+      ModuleInitializer.mainMethod("example.frontend.Todo", "main").withModuleID("b")
     },
-/*     Compile / scalaJSModuleInitializers  += {
-      ModuleInitializer.mainMethod("example.frontend.Search", "renderApp").withModuleID("Search")
-    }, */
     Dependencies.frontend,
     Dependencies.tests,
     requireJsDomEnv := true,
     testFrameworks += new TestFramework("utest.runner.Framework"),
-    
+    webpackBundlingMode := BundlingMode.LibraryOnly()
   )
   .settings(commonBuildSettings)
 
@@ -79,7 +79,7 @@ lazy val backend = (project in file("modules/backend"))
   .settings(
     Test / fork := false,
     Universal / mappings += {
-      val appJs = (frontend / Compile / fullOptJS).value.data
+      val appJs = (todo / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
     Universal  / javaOptions ++= Seq(
@@ -104,7 +104,7 @@ lazy val fastLinkCompileCopy = taskKey[Unit]("")
 val jsPath = "modules/backend/src/main/resources/assets/js"
 
 fastLinkCompileCopy := {  
-  val files = (webpack in (frontend , Compile, fastOptJS)).value  
+  val files = (webpack in (todo , Compile, fastOptJS)).value  
 
   files.foreach{f => 
     IO.copyFile(
@@ -118,7 +118,7 @@ fastLinkCompileCopy := {
 lazy val fullOptCompileCopy = taskKey[Unit]("")
 
 fullOptCompileCopy := {
-  val source = (frontend / Compile / fullOptJS).value.data
+  val source = (todo / Compile / fullOptJS).value.data
   IO.copyFile(
     source,
     baseDirectory.value / jsPath / "prod.js"
@@ -129,7 +129,7 @@ fullOptCompileCopy := {
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
   scalaVersion := V.Scala,  
   scalacOptions ++= Seq(
-    "-Ywarn-unused"
+    //"-Ywarn-unused"
   )
 )
 

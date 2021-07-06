@@ -1,10 +1,8 @@
 package webcomponents.vega
 
-import org.scalajs.dom
-
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
-import scala.scalajs.js.JSON
+
 
 @js.native
 @JSImport("vega-view", JSImport.Namespace)

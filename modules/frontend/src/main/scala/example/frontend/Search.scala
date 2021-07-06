@@ -7,7 +7,9 @@ import example.api.RouteApi
 import example.shared.SuggestionRoutes
 import scala.scalajs.js.annotation.JSExportTopLevel
 
-//@JSExportTopLevel("Search")
+import scala.scalajs.js.annotation.{JSExportTopLevel, JSExportAll}
+
+//@JSExportTopLevel(name="Search") @JSExportAll
 object Search {
 
   val ApiHost = example.api.ApiHost

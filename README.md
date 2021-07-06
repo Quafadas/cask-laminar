@@ -23,9 +23,9 @@ Example of laminar put on top of the so called "Singaporean stack". The aim is s
 
 7.  HTTP requests to other backend services through [requests scala](http://www.lihaoyi.com/post/HowtoworkwithHTTPJSONAPIsinScala.html).
 
-8. Client server interactions are via [upickle](https://www.lihaoyi.com/post/HowtoworkwithJSONinScala.html). Although this is largely abstracted away by the API - pattern match it! 
+8. Client server parsing are via [upickle](https://www.lihaoyi.com/post/HowtoworkwithJSONinScala.html). Although this is largely abstracted away by the API - pattern match it! 
 
-
+9. Simple facades for Vega and Vega embed.
 
 ## Development mode
 
@@ -49,9 +49,9 @@ yarn add jsdom
 Then move into an sbt console and run tests as normal
 
 ## What of scala 3? 
-In theory, just change the scalaVersion to 3.0.0... 
+Quill isn't yet supported. If you don't need a database though...
 
-Practically scala js bundler falls over, unclear why at this stage, help anyone?
+Just change the scalaVersion to 3.0.0... 
 
 ## Production mode
 NOT DONE FOR THIS TEMPLATE as it's primarily aimed at proving concepts. PR welcome should you care :-)!

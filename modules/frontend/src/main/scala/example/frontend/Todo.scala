@@ -12,10 +12,13 @@ import webcomponents.vega.VegaEmbed
 import scala.scalajs.js.Dynamic
 import scala.scalajs.js.JSON
 import webcomponents.vega.VegaView
- 
-//@JSExportTopLevel("Todo")
-object Todo {
+import scala.scalajs.js.annotation.JSExportTopLevel
+import scala.scalajs.js.annotation.JSExportAll
 
+
+
+object Todo {
+  
   val ApiHost = example.api.ApiHost
 
   // Shamlessly pilfered from Laminar docs
@@ -269,9 +272,12 @@ object Todo {
   }
 
   //@JSExportTopLevel(name = "start", moduleID = "todo")
-  def main(): Unit = {
+  @JSExportTopLevel(name = "renderApp", moduleID = "b")
+  def renderApp(): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), TodoMvcApp.node)
     }(unsafeWindowOwner)
   }
+
+  def main(): Unit = ()
 }
