@@ -1,7 +1,9 @@
 package example.backend
+
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import example.shared.Todos
 import io.getquill._
-import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import org.ekrich.config.Config
 
 class DB(conf: Config) {

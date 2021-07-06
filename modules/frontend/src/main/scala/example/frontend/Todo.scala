@@ -1,19 +1,18 @@
 package example.frontend
 
-import example.shared.Todos
-import com.raquo.laminar.api.L._
-import org.scalajs.dom
-import example.api.RouteApi
-import example.shared.TodoRoutes
-import example.shared.NoIdTodo
-import com.raquo.laminar.nodes.ReactiveHtmlElement
-
-import webcomponents.vega.VegaEmbed
 import scala.scalajs.js.Dynamic
 import scala.scalajs.js.JSON
+
+import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.ReactiveHtmlElement
+import example.api.RouteApi
+import example.shared.NoIdTodo
+import example.shared.TodoRoutes
+import example.shared.Todos
+import org.scalajs.dom
+import webcomponents.vega.VegaEmbed
 import webcomponents.vega.VegaView
-import scala.scalajs.js.annotation.JSExportTopLevel
-import scala.scalajs.js.annotation.JSExportAll
+
 
 object Todo {
 

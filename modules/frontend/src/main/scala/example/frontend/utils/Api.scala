@@ -1,11 +1,12 @@
 package example.api
 
-import example.shared.Route
+
 import com.raquo.airstream.core.EventStream
-import upickle.default.Writer
-import com.raquo.airstream.web.AjaxEventStream
 import com.raquo.airstream.core.Observer
+import com.raquo.airstream.web.AjaxEventStream
+import example.shared.Route
 import org.scalajs.dom
+import upickle.default.Writer
 
 /*
  * Thbis is a bit of a kooky idea, that being the API is a pure function of the a "Route" case class.

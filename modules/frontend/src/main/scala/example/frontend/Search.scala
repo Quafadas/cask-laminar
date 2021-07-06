@@ -1,13 +1,10 @@
 package example.frontend
 
 import com.raquo.laminar.api.L._
-import org.scalajs.dom
-import example.shared.GetSuggestions
 import example.api.RouteApi
+import example.shared.GetSuggestions
 import example.shared.SuggestionRoutes
-import scala.scalajs.js.annotation.JSExportTopLevel
-
-import scala.scalajs.js.annotation.{JSExportTopLevel, JSExportAll}
+import org.scalajs.dom
 
 //@JSExportTopLevel(name="Search") @JSExportAll
 object Search {

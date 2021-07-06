@@ -1,10 +1,9 @@
 package example.backend
 
-import upickle.default._
-import org.ekrich.config.ConfigFactory
-import org.ekrich.config.Config
 import example.shared._
-
+import org.ekrich.config.Config
+import org.ekrich.config.ConfigFactory
+import upickle.default._
 // Split the object and trait so that the tests can have independant database implementations...
 object Server extends cask.MainRoutes with ServerT {
   override lazy val conf: Config = ConfigFactory.load("application.conf")
@@ -19,7 +18,8 @@ trait ServerT extends cask.Routes {
   lazy val conf: Config = ???
   lazy val myDB         = new DB(conf)
 
-  class jsonApi[T, D](val routeDef: Route[T, D]) extends cask.HttpEndpoint[T, Seq[String]] {
+  class jsonApi[T, D](val routeDef: Route[T, D])
+      extends cask.HttpEndpoint[T, Seq[String]] {
 
     override val path: String         = routeDef.route
     override val methods: Seq[String] = Seq(routeDef.method)

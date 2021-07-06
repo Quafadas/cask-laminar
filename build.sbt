@@ -129,7 +129,7 @@ fullOptCompileCopy := {
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
   scalaVersion := V.Scala,  
   scalacOptions ++= Seq(
-    "-Ywarn-unused-import"
+    "-Ywarn-unused"
   )
 )
 
