@@ -149,7 +149,7 @@ val CICommands = Seq(
   "backend/compile",
   "todo/test",
   "todo/compile",
-  "todo/fastOptJS",
+  "todo/fastOptJS/webpack",
   "todo/test",
   "scalafmtCheckAll",
   s"scalafix --check $scalafixRules"
