@@ -27,7 +27,7 @@ The choices made...
 
 8. Client server parsing are via [upickle](https://www.lihaoyi.com/post/HowtoworkwithJSONinScala.html). Although this is largely abstracted away by the API - pattern match it! 
 
-9. Simple facades for Vega and Vega embed.
+9. Simple examples of writing custom JS facades for Vega and Vega embed.
 
 ## Further ideas
 1. Is it possible to publish multiple JS modules without a mass of SBT project boilerplate? Probably, it should be a homepage with links to different UIs. See laminar examples.
