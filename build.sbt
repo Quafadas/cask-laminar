@@ -147,10 +147,10 @@ val scalafixRules = Seq(
 val CICommands = Seq(
   "clean",
   "backend/compile",
-  "backend/test",
-  "frontend/compile",
-  "frontend/fastOptJS",
-  "frontend/test",
+  "todo/test",
+  "todo/compile",
+  "todo/fastOptJS",
+  "todo/test",
   "scalafmtCheckAll",
   s"scalafix --check $scalafixRules"
 ).mkString(";")
