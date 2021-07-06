@@ -42,8 +42,8 @@ class WithDbFramework extends utest.runner.Framework {
       .build()
     server.start()
 
-    val conn      = pgDataSource.getConnection()
-    val statement = conn.createStatement()
+    val conn       = pgDataSource.getConnection()
+    val statement  = conn.createStatement()
     val statement2 = conn.createStatement()
 
     val createTable = Try {
