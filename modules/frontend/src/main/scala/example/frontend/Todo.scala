@@ -17,7 +17,7 @@ object Todo {
 
   val ApiHost = example.api.ApiHost
 
-  // Shamlessly pilfered from Laminar docs
+  // Shamelessly pilfered from Laminar docs
   object TodoMvcApp {
 
     sealed abstract class Filter(val name: String, val passes: Todos => Boolean)
