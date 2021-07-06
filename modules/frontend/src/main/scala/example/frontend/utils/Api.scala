@@ -28,11 +28,9 @@ trait RouteApiT {
       headers: Map[String, String] = Map.empty,
       withCredentials: Boolean = false,
       responseType: String = "",
-      isStatusCodeSuccess: Int => Boolean =
-        AjaxEventStream.defaultIsStatusCodeSuccess,
+      isStatusCodeSuccess: Int => Boolean = AjaxEventStream.defaultIsStatusCodeSuccess,
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
-      progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] =
-        Observer.empty,
+      progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
   )(implicit w: Writer[D]): EventStream[T] = ???
 
@@ -43,11 +41,9 @@ trait RouteApiT {
       headers: Map[String, String] = Map.empty,
       withCredentials: Boolean = false,
       responseType: String = "",
-      isStatusCodeSuccess: Int => Boolean =
-        AjaxEventStream.defaultIsStatusCodeSuccess,
+      isStatusCodeSuccess: Int => Boolean = AjaxEventStream.defaultIsStatusCodeSuccess,
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
-      progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] =
-        Observer.empty,
+      progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
   )(
       replacePathSegemnts: String => String
@@ -101,8 +97,7 @@ object RouteApi extends RouteApiT {
       responseType: String = "",
       isStatusCodeSuccess: Int => Boolean = { (_: Int) => true },
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
-      progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] =
-        Observer.empty,
+      progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
   )(implicit w: Writer[D]) = {
     println(data)

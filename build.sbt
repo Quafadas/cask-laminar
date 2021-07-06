@@ -35,9 +35,9 @@ val Dependencies = new {
 inThisBuild(
   Seq(
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
-/*     semanticdbEnabled := true,
+    semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
- */    scalafixScalaBinaryVersion := V.ScalaGroup
+    scalafixScalaBinaryVersion := V.ScalaGroup
   )
 )
 
@@ -129,15 +129,14 @@ fullOptCompileCopy := {
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
   scalaVersion := V.Scala,  
   scalacOptions ++= Seq(
-    //"-Ywarn-unused"
+    "-Ywarn-unused-import"
   )
 )
 
 addCommandAlias("runDev", ";fastLinkCompileCopy; backend/reStart --mode dev")
 addCommandAlias("runProd", ";fullOptCompileCopy; backend/reStart --mode prod")
 
-val scalafixRules = Seq(
-  "OrganizeImports",
+val scalafixRules = Seq(  
   "DisableSyntax",
   "LeakingImplicitClassVal",
   "ProcedureSyntax",

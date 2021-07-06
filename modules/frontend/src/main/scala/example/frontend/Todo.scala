@@ -148,8 +148,7 @@ object Todo {
       )
     }
 
-    private def renderNewTodoInput
-        : ReactiveHtmlElement[org.scalajs.dom.html.Input] =
+    private def renderNewTodoInput: ReactiveHtmlElement[org.scalajs.dom.html.Input] =
       input(
         cls("new-todo"),
         placeholder("What needs to be done?"),
@@ -197,9 +196,7 @@ object Todo {
               button(
                 cls("destroy"),
                 composeEvents(onClick)(
-                  _.flatMap(_ => deleteStream(itemId)).flatMap(_ =>
-                    updateState()
-                  )
+                  _.flatMap(_ => deleteStream(itemId)).flatMap(_ => updateState())
                 ) --> itemsVar.writer
               )
             )
@@ -255,8 +252,7 @@ object Todo {
         }
       )
 
-    private def renderStatusBar
-        : ReactiveHtmlElement[org.scalajs.dom.html.Element] =
+    private def renderStatusBar: ReactiveHtmlElement[org.scalajs.dom.html.Element] =
       footer(
         hideIfNoItems,
         cls("footer"),
