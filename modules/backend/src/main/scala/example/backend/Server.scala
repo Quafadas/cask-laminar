@@ -18,8 +18,7 @@ trait ServerT extends cask.Routes {
   lazy val conf: Config = ???
   lazy val myDB         = new DB(conf)
 
-  class jsonApi[T, D](val routeDef: Route[T, D])
-      extends cask.HttpEndpoint[T, Seq[String]] {
+  class jsonApi[T, D](val routeDef: Route[T, D]) extends cask.HttpEndpoint[T, Seq[String]] {
 
     override val path: String         = routeDef.route
     override val methods: Seq[String] = Seq(routeDef.method)

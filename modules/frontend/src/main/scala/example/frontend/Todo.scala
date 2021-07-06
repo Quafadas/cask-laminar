@@ -13,7 +13,6 @@ import org.scalajs.dom
 import webcomponents.vega.VegaEmbed
 import webcomponents.vega.VegaView
 
-
 object Todo {
 
   val ApiHost = example.api.ApiHost

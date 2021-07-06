@@ -1,6 +1,5 @@
 package example.api
 
-
 import com.raquo.airstream.core.EventStream
 import com.raquo.airstream.core.Observer
 import com.raquo.airstream.web.AjaxEventStream
