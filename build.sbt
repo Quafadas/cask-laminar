@@ -1,4 +1,6 @@
 import org.scalajs.linker.interface.ModuleInitializer
+import java.io.File
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {    
   val Scala      = "2.13.6"
@@ -101,29 +103,39 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
 
 lazy val fastLinkCompileCopy = taskKey[Unit]("")
 
-val jsPath = "modules/backend/src/main/resources/assets/js"
+val assetPath = "/src/main/resources/assets"
+val jsPath = s"$assetPath/js"
 
-fastLinkCompileCopy := {  
+fastLinkCompileCopy := {
+  val backendDir = baseDirectory.in(backend).value.getAbsolutePath
   val files = (webpack in (todo , Compile, fastOptJS)).value  
-
   files.foreach{f => 
     IO.copyFile(
       f.data,
-      baseDirectory.value / jsPath / f.data.name
+      baseDirectory.in(backend).value / jsPath / f.data.name
     )
-  }
-  //println(files)
+  }  
+  IO.copyFile(
+    new File(s"""$backendDir/$assetPath/html/Todo_dev.html"""),
+    new File(s"""$backendDir/$assetPath/Todo.html""")
+  )    
 }
 
 lazy val fullOptCompileCopy = taskKey[Unit]("")
 
 fullOptCompileCopy := {
-  val source = (todo / Compile / fullOptJS).value.data
+  val backendDir = baseDirectory.in(backend).value.getAbsolutePath
+  val files = (webpack in (todo , Compile, fullOptJS)).value  
+    files.foreach{f => 
+    IO.copyFile(
+      f.data,
+      baseDirectory.in(backend).value / jsPath / f.data.name
+    )
+  }  
   IO.copyFile(
-    source,
-    baseDirectory.value / jsPath / "prod.js"
-  )
-
+    new File(s"""$backendDir/$assetPath/html/Todo_prod.html"""),
+    new File(s"""$backendDir/$assetPath/Todo.html""")
+  )    
 }
 
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(

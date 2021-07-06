@@ -109,7 +109,7 @@ object Todo {
         ),
         renderStatusBar,
         updateState() --> itemsVar.writer,
-        renderViz()
+        renderViz()        
       )
     }
 
