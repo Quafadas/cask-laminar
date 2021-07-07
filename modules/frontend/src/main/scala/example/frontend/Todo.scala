@@ -12,6 +12,7 @@ import example.shared.Todos
 import org.scalajs.dom
 import webcomponents.vega.VegaEmbed
 import webcomponents.vega.VegaView
+
 import annotation.unused
 
 object Todo {

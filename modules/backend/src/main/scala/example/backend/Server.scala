@@ -4,6 +4,7 @@ import example.shared._
 import org.ekrich.config.Config
 import org.ekrich.config.ConfigFactory
 import upickle.default._
+
 import annotation.unused
 // Split the object and trait so that the tests can have independant database implementations...
 object Server extends cask.MainRoutes with ServerT {

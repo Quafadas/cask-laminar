@@ -43,9 +43,6 @@ inThisBuild(
   )
 )
 
-
-
-
 lazy val root =
   (project in file(".")).aggregate(todo, backend, shared.js, shared.jvm)
 
@@ -141,14 +138,15 @@ fullOptCompileCopy := {
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
   scalaVersion := V.Scala,  
   scalacOptions ++= Seq(
-    "-Ywarn-unused"
-  )
+    "-Ywarn-unused"    
+    )
 )
 
 addCommandAlias("runDev", ";fastLinkCompileCopy; backend/reStart --mode dev")
 addCommandAlias("runProd", ";fullOptCompileCopy; backend/reStart --mode prod")
 
-val scalafixRules = Seq(  
+val scalafixRules = Seq( 
+  "OrganizeImports", 
   "DisableSyntax",
   "LeakingImplicitClassVal",
   "ProcedureSyntax",

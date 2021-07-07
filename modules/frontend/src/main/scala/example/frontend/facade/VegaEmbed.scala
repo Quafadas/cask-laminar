@@ -2,6 +2,7 @@ package webcomponents.vega
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
+
 import annotation.unused
 
 object VegaEmbed {
