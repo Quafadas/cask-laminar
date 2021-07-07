@@ -12,6 +12,7 @@ import example.shared.Todos
 import org.scalajs.dom
 import webcomponents.vega.VegaEmbed
 import webcomponents.vega.VegaView
+import annotation.unused
 
 object Todo {
 
@@ -165,7 +166,7 @@ object Todo {
     // Render a single item. Note that the result is a single element: not a stream, not some virtual DOM representation.
     private def renderTodoItem(
         itemId: Int,
-        initialTodo: Todos,
+        @unused initialTodo: Todos,
         $item: Signal[Todos]
     ): HtmlElement = {
       val isEditingVar = Var(false) // Example of local state
@@ -205,7 +206,7 @@ object Todo {
     // Note that we pass reactive variables: `$item` for reading, `updateTextObserver` for writing
     private def renderTextUpdateInput(
         itemId: Int,
-        $item: Signal[Todos],
+        @unused $item: Signal[Todos],
         isEditingObserver: Observer[Boolean],
         editVar: Var[String]
     ): ReactiveHtmlElement[org.scalajs.dom.html.Input] = {

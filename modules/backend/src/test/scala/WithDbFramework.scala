@@ -46,7 +46,7 @@ class WithDbFramework extends utest.runner.Framework {
     val statement  = conn.createStatement()
     val statement2 = conn.createStatement()
 
-    val createTable = Try {
+    Try {
       statement2.executeUpdate(
         s"""CREATE TABLE IF NOT EXISTS todos (
             todo_id serial primary KEY,
