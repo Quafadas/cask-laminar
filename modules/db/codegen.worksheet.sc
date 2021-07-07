@@ -1,5 +1,5 @@
 import $ivy.`io.getquill::quill-jdbc:3.7.0`
-import $ivy.`org.postgresql:postgresql:42.2.8`
+import $ivy.`org.postgresql:postgresql:42.2.23`
 import $ivy.`io.getquill::quill-codegen-jdbc:3.7.1`
   
 import io.getquill._
