@@ -14,7 +14,7 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=      
-        Seq("com.raquo" %%% "laminar" % "0.13.0")    
+        Seq("com.raquo" %%% "laminar" % "0.13.1")    
   )
 
   lazy val backend = Seq(
