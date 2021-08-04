@@ -1,3 +1,19 @@
+## Development mode
+
+Run in SBT (uses fast JS compilation, not optimized):
+
+```
+sbt> ~runDev
+```
+
+And open http://localhost:8080/
+
+This will restart the server on any changes: shared code, client/server, assets. You should see "hello" if the server is working. 
+
+Then try http://localhost:8080/todo. You'll probably get errors if you didn't setup the datsbase... 
+
+Have a look at the DB folder in modules and the "application.conf" file to wire up postgres.
+
 # cask-laminar-stack
 
 Example of laminar put on top of the so called "Singaporean stack". The aim is simplicitly... as far as possible inside the requirements of; 
@@ -37,22 +53,6 @@ The choices made...
 
 ## Credits
 This is nothing other than glue around the genius of others. Thankyou to the maintainers of all the libraries included here. They are great.
-
-## Development mode
-
-Run in SBT (uses fast JS compilation, not optimized):
-
-```
-sbt> ~runDev
-```
-
-And open http://localhost:8080/
-
-This will restart the server on any changes: shared code, client/server, assets. You should see "hello" if the server is working. 
-
-Then try http://localhost:8080/todo. You'll probably get errors if you didn't setup the datsbase... 
-
-Have a look at the DB folder in modules and the "application.conf" file to wire up postgres.
 
 ## Tests
 It is a prerequisite to have jsdom installed, in order for the frontend tests to run. Proposal:

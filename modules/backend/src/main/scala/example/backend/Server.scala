@@ -4,6 +4,8 @@ import example.shared._
 import org.ekrich.config.Config
 import org.ekrich.config.ConfigFactory
 import upickle.default._
+
+import annotation.unused
 // Split the object and trait so that the tests can have independant database implementations...
 object Server extends cask.MainRoutes with ServerT {
   override lazy val conf: Config = ConfigFactory.load("application.conf")
@@ -11,7 +13,7 @@ object Server extends cask.MainRoutes with ServerT {
 
 trait ServerT extends cask.Routes {
   // Compile time check that the route type matches the decoder in it's route spec
-  def routeTypeCheck[T, U](a: T, b: U)(implicit evidence: T =:= U) = true
+  def routeTypeCheck[T, U](@unused a: T, @unused b: U)(implicit evidence: T =:= U) = true
   implicit val ec: scala.concurrent.ExecutionContext =
     scala.concurrent.ExecutionContext.global
 

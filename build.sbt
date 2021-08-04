@@ -14,13 +14,13 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=      
-        Seq("com.raquo" %%% "laminar" % "0.13.0")    
+        Seq("com.raquo" %%% "laminar" % "0.13.1")    
   )
 
   lazy val backend = Seq(
     libraryDependencies += "com.lihaoyi" %% "cask" % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
-    libraryDependencies += "io.getquill"%% "quill-jdbc"%"3.4.10", // DB lib - https://getquill.io
-    libraryDependencies +="org.postgresql"%"postgresql" % "42.2.8", // Postgres driver, note the single %
+    libraryDependencies += "io.getquill"%% "quill-jdbc"%"3.8.0", // DB lib - https://getquill.io
+    libraryDependencies +="org.postgresql"%"postgresql" % "42.2.23", // Postgres driver, note the single %
     libraryDependencies += "org.ekrich" %% "sconfig" % "1.4.4", // config - https://github.com/ekrich/sconfig
     libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.9" // simple http library   
   )
@@ -42,9 +42,6 @@ inThisBuild(
     scalafixScalaBinaryVersion := V.ScalaGroup
   )
 )
-
-
-
 
 lazy val root =
   (project in file(".")).aggregate(todo, backend, shared.js, shared.jvm)
@@ -143,14 +140,15 @@ fullOptCompileCopy := {
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
   scalaVersion := V.Scala,  
   scalacOptions ++= Seq(
-    "-Ywarn-unused"
-  )
+    "-Ywarn-unused"    
+    )
 )
 
 addCommandAlias("runDev", ";fastLinkCompileCopy; backend/reStart --mode dev")
 addCommandAlias("runProd", ";fullOptCompileCopy; backend/reStart --mode prod")
 
-val scalafixRules = Seq(  
+val scalafixRules = Seq( 
+  "OrganizeImports", 
   "DisableSyntax",
   "LeakingImplicitClassVal",
   "ProcedureSyntax",
