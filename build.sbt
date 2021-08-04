@@ -67,8 +67,10 @@ lazy val todo = (project in file("modules/frontend"))
     Dependencies.tests,
     requireJsDomEnv := true,
     testFrameworks += new TestFramework("utest.runner.Framework"),
-    webpackBundlingMode := BundlingMode.LibraryOnly()
-  )
+    webpackBundlingMode := BundlingMode.LibraryOnly(),
+    webpackDevServerPort := 3000,
+    webpackDevServerExtraArgs := Seq("--inline")
+  ) 
   .settings(commonBuildSettings)
 
 lazy val backend = (project in file("modules/backend"))
