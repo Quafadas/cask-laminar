@@ -7,5 +7,6 @@ object ApiHost {
   val host   = dom.window.location.host
 
   println(s"$scheme//$host")
-  s"$scheme//$host"
+  //s"$scheme//$host"
+  ""
 }
