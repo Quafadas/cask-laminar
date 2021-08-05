@@ -5,13 +5,14 @@ import example.api.RouteApi
 import example.shared.GetSuggestions
 import example.shared.SuggestionRoutes
 import org.scalajs.dom
+import com.raquo.laminar.nodes.ReactiveHtmlElement
 
 //@JSExportTopLevel(name="Search") @JSExportAll
 object Search {
 
   val ApiHost = example.api.ApiHost
 
-  val searchBox = {
+  val searchBox: (StrictSignal[String], ReactiveHtmlElement[org.scalajs.dom.html.Input]) = {
     val zipVar           = Var("")
     val zipValueSignal   = zipVar.signal
     val zipValueObserver = zipVar.writer
@@ -27,7 +28,7 @@ object Search {
     )
   }
 
-  val checkBox = {
+  val checkBox: (Var[Boolean], ReactiveHtmlElement[org.scalajs.dom.html.Input]) = {
     val checkVar = Var(true)
     (
       checkVar,
@@ -39,7 +40,7 @@ object Search {
     )
   }
 
-  def app(debounce: Int = 250) = {
+  def app(debounce: Int = 250): ReactiveHtmlElement[org.scalajs.dom.html.Div] = {
 
     val debounced: Signal[(String, Boolean)] =
       if (debounce > 0)
@@ -66,7 +67,7 @@ object Search {
       )
     }
 
-    val results =
+    val results: ReactiveHtmlElement[org.scalajs.dom.html.Div] =
       div(idAttr := "results", child <-- asDomNode)
 
     div(

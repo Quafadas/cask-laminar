@@ -1,10 +1,10 @@
 package example.backend
 
-import utest._
-import example.shared.Todos
 import cask.model.Status
-import upickle.default._
 import example.shared.TodoRoutes
+import example.shared.Todos
+import upickle.default.{write, read}
+import utest.{TestSuite, Tests, test}
 
 object IntegrationTest extends TestSuite {
 

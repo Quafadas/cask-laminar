@@ -1,12 +1,14 @@
 package example.backend
 
-import org.ekrich.config.ConfigFactory
-import org.ekrich.config.Config
 import java.io.File
-import scala.util.Try
+
 import scala.util.Failure
 import scala.util.Success
+import scala.util.Try
+
 import io.undertow.Undertow
+import org.ekrich.config.Config
+import org.ekrich.config.ConfigFactory
 import org.postgresql.ds.PGSimpleDataSource
 
 class WithDbFramework extends utest.runner.Framework {
