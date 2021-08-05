@@ -15,7 +15,15 @@ const WebApp = merge(ScalaJS, {
   watchOptions: {
     //Files or folders that are not monitored
     ignored: /node_modules/
-  }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
 });
 
 module.exports = WebApp;
