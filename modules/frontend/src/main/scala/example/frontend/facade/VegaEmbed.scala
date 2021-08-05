@@ -1,9 +1,11 @@
-package webcomponents.vega
+// We can now get this from Scalably typed... which is much better! 
+/* package webcomponents.vega
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
 import annotation.unused
+
 
 object VegaEmbed {
   @js.native
@@ -17,3 +19,4 @@ object VegaEmbed {
       opts: js.Dynamic
   ): js.Promise[js.Dynamic] = js.native
 }
+ */

@@ -99,7 +99,7 @@ object RouteApi extends RouteApiT {
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
       progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
-  )(implicit w: Writer[D]) = {
+  )(implicit w: Writer[D]): EventStream[T] = {
     println(data)
     val result = new AjaxEventStream(
       route.method.toUpperCase(),

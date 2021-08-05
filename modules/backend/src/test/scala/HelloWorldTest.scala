@@ -1,8 +1,8 @@
 package example.backend
 
-import utest._
-import io.undertow.Undertow
 import cask.model.Status
+import io.undertow.Undertow
+import utest._
 
 object HelloWorldTest extends TestSuite {
 
