@@ -3,8 +3,11 @@ package example.backend
 import cask.model.Status
 import example.shared.TodoRoutes
 import example.shared.Todos
-import upickle.default.{write, read}
-import utest.{TestSuite, Tests, test}
+import upickle.default.read
+import upickle.default.write
+import utest.TestSuite
+import utest.Tests
+import utest.test
 
 object IntegrationTest extends TestSuite {
 

@@ -1,4 +1,4 @@
-// We can now get this from Scalably typed... which is much better! 
+// We can now get this from Scalably typed... which is much better!
 /* package webcomponents.vega
 
 import scala.scalajs.js

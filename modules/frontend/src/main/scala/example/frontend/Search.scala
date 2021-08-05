@@ -1,11 +1,11 @@
 package example.frontend
 
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.ReactiveHtmlElement
 import example.api.RouteApi
 import example.shared.GetSuggestions
 import example.shared.SuggestionRoutes
 import org.scalajs.dom
-import com.raquo.laminar.nodes.ReactiveHtmlElement
 
 //@JSExportTopLevel(name="Search") @JSExportAll
 object Search {

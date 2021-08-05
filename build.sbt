@@ -52,9 +52,7 @@ lazy val todo = (project in file("modules/frontend"))
   .settings(
     Dependencies.frontend,
     Dependencies.tests,
-    
     testFrameworks += new TestFramework("utest.runner.Framework"),
-        
     Compile / npmDependencies += "vega-embed"                 -> "6.18.2",
     Compile / npmDependencies += "vega"                       -> "5.19.1",
     Compile / npmDependencies += "vega-lite"                  -> "4.17.0",
@@ -64,23 +62,18 @@ lazy val todo = (project in file("modules/frontend"))
     Compile / npmDevDependencies += "css-loader"              -> "5.0.1",
     Compile / npmDevDependencies += "mini-css-extract-plugin" -> "1.3.4",
     Compile / npmDevDependencies += "webpack-merge"           -> "4.1.0",
-    
     version in webpack := "4.46.0",
     version in startWebpackDevServer := "3.11.2",
-    
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
-
     webpackEmitSourceMaps := false, // to keep compile / reload cycle fast
     webpackDevServerPort := 3000,
     webpackBundlingMode := BundlingMode.LibraryAndApplication(),
     webpackDevServerExtraArgs := Seq("--inline"),
     webpackConfigFile := Some(baseDirectory.value / "webpack.config.js"),
-
     stIgnore += "vega-view",
-    
     scalaJSUseMainModuleInitializer := true,
     requireJsDomEnv := true,
-    useYarn := true,
+    useYarn := true
   )
   .settings(commonBuildSettings)
 

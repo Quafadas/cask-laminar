@@ -2,6 +2,7 @@ package example.frontend
 
 import scala.scalajs.js.Dynamic
 import scala.scalajs.js.JSON
+
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import example.api.RouteApi
@@ -9,7 +10,6 @@ import example.shared.NoIdTodo
 import example.shared.TodoRoutes
 import example.shared.Todos
 import org.scalajs.dom
-//import webcomponents.vega.VegaEmbed
 import webcomponents.vega.VegaView
 
 import annotation.unused
@@ -62,7 +62,6 @@ object Todo {
     def updateStateFromStream(inStream: EventStream[_]) =
       inStream.flatMap(_ => updateState())
 
-
     // When building up streams, I unashamedly mapped them into these temporary observers...
     /*  private val testVarString : Var[String] = Var( "")
     private val testVarNoIdToDo: Var[NoIdTodo] = Var( NoIdTodo("", false) )
@@ -70,7 +69,7 @@ object Todo {
     private val testVarSInt: Var[Seq[Int]] = Var(Seq(0) )
      */
 
-     private val filterVar = Var[Filter](ShowAll)
+    private val filterVar = Var[Filter](ShowAll)
     // Data Viz machinery
     val config = JSON.parse("""{"logLevel": 0}""")
 
@@ -79,7 +78,7 @@ object Todo {
 
     val pieStreamSt = EventStream
       .fromJsPromise(
-        typings.vegaEmbed.mod.default (
+        typings.vegaEmbed.mod.default(
           s"#$vizDivPieClass",
           "api/pieSpec"
         )
@@ -89,7 +88,6 @@ object Todo {
     val managePieViewObj = pieStreamSt.map {
       _.map(_.view.asInstanceOf[VegaView])
     }
- 
 
     val updatePieVizStream = managePieViewObj.combineWith(itemsVar.signal)
     // --- Views ---
@@ -124,7 +122,7 @@ object Todo {
         idAttr := vizDivPieClass,
         updatePieVizStream.signal --> ({
           case (view, value) => {
-            val words: Map[Boolean,Seq[Todos]] = value.groupBy(_.completed)
+            val words: Map[Boolean, Seq[Todos]] = value.groupBy(_.completed)
             words.values.foreach(s => println(s.length))
             val arrayData = scala.scalajs.js.Array[scala.scalajs.js.Object]()
             println("Render this")
@@ -154,7 +152,7 @@ object Todo {
     }
 
     private def renderNewTodoInput: ReactiveHtmlElement[org.scalajs.dom.html.Input] =
-      input(        
+      input(
         cls("new-todo"),
         placeholder("What needs to be done?"),
         autoFocus(true),
@@ -323,7 +321,7 @@ object Todo {
 
   //@JSExportTopLevel(name = "start", moduleID = "todo")
   //@JSExportTopLevel(name = "renderApp", moduleID = "b")
-  def main(args:Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), TodoMvcApp.node)
     }(unsafeWindowOwner)
