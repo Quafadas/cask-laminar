@@ -22,6 +22,6 @@ module.exports = WebApp;
 module.exports.plugins = [
   new HtmlWebpackPlugin({
     title: "cask-laminar",
-    template: './index.html'
+    template: '../../../../index.html'
   })
 ];
