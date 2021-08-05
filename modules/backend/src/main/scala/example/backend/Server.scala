@@ -1,5 +1,9 @@
 package example.backend
 
+import cask.endpoints.QueryParamReader
+import cask.endpoints.StaticUtil
+import cask.model.Request
+import cask.router.HttpEndpoint
 import example.shared._
 import org.ekrich.config.Config
 import org.ekrich.config.ConfigFactory
@@ -39,6 +43,9 @@ trait ServerT extends cask.Routes {
   // This is our simplest hello route, we test it to make sure :-).
   @cask.get("/")
   def hi() = "hello"
+
+  @cask.get("/api/pieSpec")
+  def pieSpec() = example.viz.Pie.pieSpec
 
   @jsonApi(TodoRoutes.listAllTodos)
   def allToDos(): Seq[Todos] = {
@@ -102,13 +109,35 @@ trait ServerT extends cask.Routes {
   }
   def t5 = routeTypeCheck(suggest(), SuggestionRoutes.allSuggestions.decode(""))
 
-  @cask.staticResources("/search")
+  class myStaticResources(val path: String, resourceRoot: ClassLoader = classOf[myStaticResources].getClassLoader, headers: Seq[(String, String)] = Nil)
+      extends HttpEndpoint[String, Seq[String]] {
+    val methods = Seq("get")
+    type InputParser[T] = QueryParamReader[T]
+    override def subpath = true
+
+    def wrapFunction(ctx: Request, delegate: Delegate) = {
+      delegate(Map()).map(t => {
+        println(ctx.remainingPathSegments.headOption)
+        val headersOut: Seq[(String, String)] = ctx.remainingPathSegments.headOption match {
+          case Some(s) if s.takeRight(2) == "js"   => Seq(("Content-Type", "text/javascript"))
+          case Some(s) if s.takeRight(3) == "css"  => Seq(("Content-Type", "text/css"))
+          case Some(s) if s.takeRight(4) == "html" => Seq(("Content-Type", "text/html"))
+          case _                                   => Nil
+        }
+        cask.model.StaticResource(StaticUtil.makePath(t, ctx), resourceRoot, headersOut)
+      })
+    }
+
+    def wrapPathSegment(s: String): Seq[String] = Seq(s)
+  }
+
+  @myStaticResources("/search")
   def searchUi() = "assets/Search.html"
 
-  @cask.staticResources("/todo")
+  @myStaticResources("/todo")
   def todoUi() = "assets/Todo.html"
 
-  @cask.staticResources("/assets")
+  @myStaticResources("/assets")
   def staticResourceRoute() = "assets"
 
   initialize()
