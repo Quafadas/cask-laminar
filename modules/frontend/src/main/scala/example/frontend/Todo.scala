@@ -10,10 +10,10 @@ import example.shared.NoIdTodo
 import example.shared.TodoRoutes
 import example.shared.Todos
 import org.scalajs.dom
-import webcomponents.vega.VegaEmbed
 import webcomponents.vega.VegaView
 
 import annotation.unused
+//import typings.vegaEmbed
 
 object Todo {
 
@@ -75,18 +75,20 @@ object Todo {
 
     // This signal comes from a JS Promise... that's nice for third party integration.
     val vizDivPieClass = "vizPie"
-    val pieStream: Signal[Option[Dynamic]] = EventStream
+
+    val pieStreamSt = EventStream
       .fromJsPromise(
-        VegaEmbed.embed(
+        typings.vegaEmbed.mod.default(
           s"#$vizDivPieClass",
-          JSON.parse(example.frontend.viz.Pie.pieSpec),
-          config
+          "api/pieSpec"
         )
       )
       .toWeakSignal
-    val managePieViewObj = pieStream.map {
+
+    val managePieViewObj = pieStreamSt.map {
       _.map(_.view.asInstanceOf[VegaView])
     }
+
     val updatePieVizStream = managePieViewObj.combineWith(itemsVar.signal)
     // --- Views ---
     lazy val node: HtmlElement = {
@@ -98,7 +100,7 @@ object Todo {
         cls("todoapp"),
         div(
           cls("header"),
-          h1("todos"),
+          h1("Todo 14"),
           renderNewTodoInput
         ),
         div(
@@ -120,10 +122,11 @@ object Todo {
         idAttr := vizDivPieClass,
         updatePieVizStream.signal --> ({
           case (view, value) => {
-            val words = value.groupBy(_.completed)
-            dom.console.log(words)
-
+            val words: Map[Boolean, Seq[Todos]] = value.groupBy(_.completed)
+            words.values.foreach(s => println(s.length))
             val arrayData = scala.scalajs.js.Array[scala.scalajs.js.Object]()
+            println("Render this")
+            arrayData.foreach(println)
             words.toVector.map {
               case (completed, items) => {
                 val temp = (completed, items) match {
@@ -318,7 +321,7 @@ object Todo {
 
   //@JSExportTopLevel(name = "start", moduleID = "todo")
   //@JSExportTopLevel(name = "renderApp", moduleID = "b")
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), TodoMvcApp.node)
     }(unsafeWindowOwner)

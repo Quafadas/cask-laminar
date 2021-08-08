@@ -43,13 +43,16 @@ The choices made...
 
 8. Client server parsing are via [upickle](https://www.lihaoyi.com/post/HowtoworkwithJSONinScala.html). Although this is largely abstracted away by the API - pattern match it! 
 
-9. Simple examples of writing custom JS facades for Vega and Vega embed.
+9. Simple examples of writing custom JS facades for Vega View.
+
+10. Vega Embed is sucked through Scalably typed
+
+11. Scala JS Bundler has a setup which allows "live reloading" in the "todo" project
 
 ## Further ideas
-1. Is it possible to publish multiple JS modules without a mass of SBT project boilerplate? Probably, it should be a homepage with links to different UIs. See laminar examples.
+1. Incorporate waypoint for client side routing
 2. Frontend testing is non-existent (!)
-3. Incorporate something from ScalabyTyped to prove the concept
-4. Scala 3 (wait for the genius maintainers of quill)
+3. Scala 3 (wait for the genius maintainers of quill)
 
 ## Credits
 This is nothing other than glue around the genius of others. Thankyou to the maintainers of all the libraries included here. They are great.

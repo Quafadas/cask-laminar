@@ -2,10 +2,10 @@ import org.scalajs.linker.interface.ModuleInitializer
 import java.io.File
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
-val V = new {    
-  val Scala      = "2.13.6"
-  val ScalaGroup = "2.13"
-  val organiseImports  = "0.5.0"
+val V = new {
+  val Scala           = "2.13.6"
+  val ScalaGroup      = "2.13"
+  val organiseImports = "0.5.0"
 }
 
 scalaVersion := V.Scala
@@ -13,8 +13,8 @@ scalaVersion := V.Scala
 val Dependencies = new {
 
   lazy val frontend = Seq(
-    libraryDependencies ++=      
-        Seq("com.raquo" %%% "laminar" % "0.13.1")    
+    libraryDependencies ++=
+      Seq("com.raquo" %%% "laminar" % "0.13.1")
   )
 
   lazy val backend = Seq(
@@ -23,6 +23,7 @@ val Dependencies = new {
     libraryDependencies +="org.postgresql"%"postgresql" % "42.2.23", // Postgres driver, note the single %
     libraryDependencies += "org.ekrich" %% "sconfig" % "1.4.4", // config - https://github.com/ekrich/sconfig
     libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.9" // simple http library   
+
   )
 
   lazy val shared = Def.settings(
@@ -48,23 +49,32 @@ lazy val root =
 
 lazy val todo = (project in file("modules/frontend"))
   .dependsOn(shared.js)
-  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
+  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin, ScalablyTypedConverterPlugin)
   .settings(
-    Compile / npmDependencies += "vega-embed" -> "6.18.2",
-    Compile / npmDependencies += "vega" -> "5.19.1",
-    Compile / npmDependencies += "vega-lite" -> "4.17.0",
-    Compile / npmDependencies += "vega-view" -> "5.10.1",
-
-    //scalaJSUseMainModuleInitializer := true,
-    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
-     Compile / scalaJSModuleInitializers  += {
-      ModuleInitializer.mainMethod("example.frontend.Todo", "main").withModuleID("todo")
-    },
     Dependencies.frontend,
     Dependencies.tests,
-    requireJsDomEnv := true,
     testFrameworks += new TestFramework("utest.runner.Framework"),
-    webpackBundlingMode := BundlingMode.LibraryOnly()
+    Compile / npmDependencies += "vega-embed"                 -> "6.18.2",
+    Compile / npmDependencies += "vega"                       -> "5.19.1",
+    Compile / npmDependencies += "vega-lite"                  -> "4.17.0",
+    Compile / npmDependencies += "vega-view"                  -> "5.10.1",
+    Compile / npmDevDependencies += "html-webpack-plugin"     -> "4.0.0",
+    Compile / npmDevDependencies += "style-loader"            -> "2.0.0",
+    Compile / npmDevDependencies += "css-loader"              -> "5.0.1",
+    Compile / npmDevDependencies += "mini-css-extract-plugin" -> "1.3.4",
+    Compile / npmDevDependencies += "webpack-merge"           -> "4.1.0",
+    version in webpack := "4.46.0",
+    version in startWebpackDevServer := "3.11.2",
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
+    webpackEmitSourceMaps := false, // to keep compile / reload cycle fast
+    webpackDevServerPort := 3000,
+    webpackBundlingMode := BundlingMode.LibraryAndApplication(),
+    webpackDevServerExtraArgs := Seq("--inline"),
+    webpackConfigFile := Some(baseDirectory.value / "webpack.config.js"),
+    stIgnore += "vega-view",
+    scalaJSUseMainModuleInitializer := true,
+    requireJsDomEnv := true,
+    useYarn := true
   )
   .settings(commonBuildSettings)
 
@@ -74,19 +84,19 @@ lazy val backend = (project in file("modules/backend"))
   .settings(Dependencies.tests)
   .settings(commonBuildSettings)
   .enablePlugins(JavaAppPackaging)
-  .enablePlugins(DockerPlugin)  
+  .enablePlugins(DockerPlugin)
   .settings(
     Test / fork := false,
     Universal / mappings += {
       val appJs = (todo / Compile / fullOptJS).value.data
       appJs -> ("lib/prod.js")
     },
-    Universal  / javaOptions ++= Seq(
-/*       "--port 8080",
+    Universal / javaOptions ++= Seq(
+      /*       "--port 8080",
       "--mode prod" */
     ),
-     Docker / packageName := "laminar-cask",
-     testFrameworks += new TestFramework("example.backend.WithDbFramework")
+    Docker / packageName := "laminar-cask",
+    testFrameworks += new TestFramework("example.backend.WithDbFramework")
   )
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
@@ -101,52 +111,52 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
 lazy val fastLinkCompileCopy = taskKey[Unit]("")
 
 val assetPath = "/src/main/resources/assets"
-val jsPath = s"$assetPath/js"
+val jsPath    = s"$assetPath/js"
 
 fastLinkCompileCopy := {
   val backendDir = baseDirectory.in(backend).value.getAbsolutePath
-  val files = (webpack in (todo , Compile, fastOptJS)).value  
-  files.foreach{f => 
+  val files      = (webpack in (todo, Compile, fastOptJS)).value
+  files.foreach { f =>
     IO.copyFile(
       f.data,
       baseDirectory.in(backend).value / jsPath / f.data.name
     )
-  }  
+  }
   IO.copyFile(
     new File(s"""$backendDir/$assetPath/html/Todo_dev.html"""),
     new File(s"""$backendDir/$assetPath/Todo.html""")
-  )    
+  )
 }
 
 lazy val fullOptCompileCopy = taskKey[Unit]("")
 
 fullOptCompileCopy := {
   val backendDir = baseDirectory.in(backend).value.getAbsolutePath
-  val files = (webpack in (todo , Compile, fullOptJS)).value  
-    files.foreach{f => 
+  val files      = (webpack in (todo, Compile, fullOptJS)).value
+  files.foreach { f =>
     IO.copyFile(
       f.data,
       baseDirectory.in(backend).value / jsPath / f.data.name
     )
-  }  
+  }
   IO.copyFile(
     new File(s"""$backendDir/$assetPath/html/Todo_prod.html"""),
     new File(s"""$backendDir/$assetPath/Todo.html""")
-  )    
+  )
 }
 
 lazy val commonBuildSettings: Seq[Def.Setting[_]] = Seq(
-  scalaVersion := V.Scala,  
+  scalaVersion := V.Scala,
   scalacOptions ++= Seq(
-    "-Ywarn-unused"    
-    )
+    "-Ywarn-unused"
+  )
 )
 
 addCommandAlias("runDev", ";fastLinkCompileCopy; backend/reStart --mode dev")
 addCommandAlias("runProd", ";fullOptCompileCopy; backend/reStart --mode prod")
 
-val scalafixRules = Seq( 
-  "OrganizeImports", 
+val scalafixRules = Seq(
+  "OrganizeImports",
   "DisableSyntax",
   "LeakingImplicitClassVal",
   "ProcedureSyntax",
