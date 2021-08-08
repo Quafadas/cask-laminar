@@ -8,23 +8,11 @@ sbt> ~runDev
 
 And open http://localhost:8080/
 
-This will restart the server on any changes: shared code, client/server, assets. You should see "hello" if the server is working. 
+This will restart the server on any changes: shared code, and copy client assets to the right place. You should see "hello" if the server is working at the root url. It's pretty easy to see where that comes from :-). 
 
 Then try http://localhost:8080/todo. You'll probably get errors if you didn't setup the datsbase... 
 
 Have a look at the DB folder in modules and the "application.conf" file to wire up postgres.
-
-## Real development mode
-Whilst the above works, and it's easy to get started... the feedback loop is too slow for frontend development, and we have to refresh the browser with every change! That won't do... let's split the workflow into frontend and backend. 
-
-1. Start two sbt shells
-2. In the first shell, "project backend" to switch to the backend project. 
-3. In the back project, ~reStart ... this will restart the backendn on any change
-4. In the second shell switch to the todo project "project todo"
-5. start a webpack dev server... we have a config laid out in the root of that project... "startWebpackDevServer"
-6. once webpack is up and running ~fastOptJS::webpack... and you should see all change reload without intervention in the browser on the frontend. 
-
-Note: The webpack config (which is being served on localhost:3000) proxies Ajax requests to port 8080/api, i.e. assumes you have kept that as the backend port, and have requests to the backend running through the "api" bath . 
 
 # cask-laminar-stack
 
@@ -61,6 +49,18 @@ The choices made...
 
 11. Scala JS Bundler has a setup which allows "live reloading" in the "todo" project
 
+## Real development mode
+Whilst the above works, and it's easy to get started... the feedback loop is too slow for frontend development, and we have to refresh the browser with every change! That won't do... let's split the workflow into frontend and backend. 
+
+1. Start two sbt shells
+2. In the first shell, "project backend" to switch to the backend project. 
+3. In the back project, ~reStart ... this will restart the backend on any change
+4. In the second shell switch to the todo project "project todo"
+5. start a webpack dev server... we have a config laid out in the root of that project... "startWebpackDevServer"
+6. once webpack is up and running ~fastOptJS::webpack... and you should see all change reload without intervention in the browser on the frontend. 
+
+Note: The webpack config (which is being served on localhost:3000) proxies Ajax requests to port 8080/api, i.e. assumes you have kept that as the backend port, and have requests to the backend running through the "api" path. 
+
 ## Further ideas
 1. Incorporate waypoint for client side routing
 2. Frontend testing is non-existent (!)
@@ -89,7 +89,7 @@ sbt> ~runProd
 ```
 
 ## Docker packaging 
-NOT TESTED FOR THIS TEMPLATE as it's primarily aimed at proving concepts. PR welcome should you care :-)!
+NOT TESTED FOR THIS TEMPLATE as it's primarily aimed at proving concepts, getting started and experimentation. PR welcome should you care :-)!
 
 ```
 sbt> backend/docker:publishLocal
