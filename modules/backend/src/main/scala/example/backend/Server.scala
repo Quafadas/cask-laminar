@@ -3,16 +3,15 @@ package example.backend
 import cask.endpoints.QueryParamReader
 import cask.endpoints.StaticUtil
 import cask.model.Request
+import cask.model.Response
 import cask.router.HttpEndpoint
+import cask.router.Result
 import example.shared._
 import org.ekrich.config.Config
 import org.ekrich.config.ConfigFactory
 import upickle.default._
 
 import annotation.unused
-
-import cask.model.Response
-import cask.router.Result
 // Split the object and trait so that the tests can have independant database implementations...
 object Server extends cask.MainRoutes with ServerT {
   override lazy val conf: Config = ConfigFactory.load("application.conf")
@@ -25,7 +24,7 @@ trait ServerT extends cask.Routes {
     scala.concurrent.ExecutionContext.global
 
   lazy val conf: Config = ???
-  lazy val myDB: DB         = new DB(conf)
+  lazy val myDB: DB     = new DB(conf)
 
   class jsonApi[T, D](val routeDef: Route[T, D]) extends cask.HttpEndpoint[T, Seq[String]] {
 

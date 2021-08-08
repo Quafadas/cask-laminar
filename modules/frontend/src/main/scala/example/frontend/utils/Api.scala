@@ -32,7 +32,7 @@ trait RouteApiT {
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
       progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
-  )(implicit w: ReadWriter[D], t : ReadWriter[T]): EventStream[T] = ???
+  )(implicit w: ReadWriter[D], t: ReadWriter[T]): EventStream[T] = ???
 
   def pathSegmentedRoute[T, D](
       route: Route[T, D],
@@ -48,7 +48,7 @@ trait RouteApiT {
   )(
       replacePathSegemnts: String => String
   )(implicit t: ReadWriter[T], d: ReadWriter[D]): EventStream[T] = {
-    val newRoute = route.copy[T,D](route = replacePathSegemnts(route.route))
+    val newRoute = route.copy[T, D](route = replacePathSegemnts(route.route))
     simpleRoute(
       newRoute,
       data,
@@ -99,7 +99,7 @@ object RouteApi extends RouteApiT {
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
       progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
-  )(implicit w: ReadWriter[D], t : ReadWriter[T]): EventStream[T] = {
+  )(implicit w: ReadWriter[D], t: ReadWriter[T]): EventStream[T] = {
     println(data)
     val result = new AjaxEventStream(
       route.method.toUpperCase(),
