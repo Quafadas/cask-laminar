@@ -36,7 +36,7 @@ object IntegrationTest extends TestSuite {
 
       test("we can retrieve our new todo") {
         val req2 = requests.get(s"$host/api/todo/$theId")
-        withId = TodoRoutes.getATodo.decode(req2.text())
+        withId = TodoRoutes.getATodo.decodeResponse(req2.text())
         assert(withId.get.description.contains("Run tests"))
       }
       test("that we can update our todo") {

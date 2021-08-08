@@ -10,6 +10,9 @@ import org.ekrich.config.ConfigFactory
 import upickle.default._
 
 import annotation.unused
+
+import cask.model.Response
+import cask.router.Result
 // Split the object and trait so that the tests can have independant database implementations...
 object Server extends cask.MainRoutes with ServerT {
   override lazy val conf: Config = ConfigFactory.load("application.conf")
@@ -22,7 +25,7 @@ trait ServerT extends cask.Routes {
     scala.concurrent.ExecutionContext.global
 
   lazy val conf: Config = ???
-  lazy val myDB         = new DB(conf)
+  lazy val myDB: DB         = new DB(conf)
 
   class jsonApi[T, D](val routeDef: Route[T, D]) extends cask.HttpEndpoint[T, Seq[String]] {
 
@@ -30,7 +33,7 @@ trait ServerT extends cask.Routes {
     override val methods: Seq[String] = Seq(routeDef.method)
 
     lazy implicit val s: Writer[T] = routeDef.encoder
-    def wrapFunction(ctx: cask.Request, delegate: Delegate) = {
+    def wrapFunction(ctx: cask.Request, delegate: Delegate): Result[Response[Response.Data.WritableData[String]]] = {
       delegate(Map()).map { (num: T) =>
         cask.Response(upickle.default.write(num))
       }
@@ -38,36 +41,35 @@ trait ServerT extends cask.Routes {
     def wrapPathSegment(s: String) = Seq(s)
     type InputParser[T] = cask.endpoints.QueryParamReader[T]
   }
-  ///-------
 
   // This is our simplest hello route, we test it to make sure :-).
   @cask.get("/")
-  def hi() = "hello"
+  def hi(): String = "hello"
 
   @cask.get("/api/pieSpec")
-  def pieSpec() = example.viz.Pie.pieSpec
+  def pieSpec(): String = example.viz.Pie.pieSpec
 
   @jsonApi(TodoRoutes.listAllTodos)
   def allToDos(): Seq[Todos] = {
     myDB.allTodos()
   }
-  def typeCheck1 =
-    routeTypeCheck(allToDos(), TodoRoutes.listAllTodos.decode(""))
+  def typeCheck1: Boolean =
+    routeTypeCheck(allToDos(), TodoRoutes.listAllTodos.decodeResponse(""))
 
   @jsonApi(TodoRoutes.getATodo)
   def aTodo(id: Int): Option[Todos] = {
     myDB.aTodo(id).headOption
   }
-  def t2 = routeTypeCheck(aTodo(0), TodoRoutes.getATodo.decode(""))
+  def t2: Boolean = routeTypeCheck(aTodo(0), TodoRoutes.getATodo.decodeResponse(""))
 
   @jsonApi(TodoRoutes.newTodo)
   def createToDos(request: cask.Request): Int = {
-    val td: NoIdTodo = TodoRoutes.newTodo.paramReader.get(request.text())
+    val td: NoIdTodo = TodoRoutes.newTodo.requestBodyReader.get(request.text())
     myDB.addTodo(Todos(0, td.description, td.completed))
   }
-  def t3 = routeTypeCheck(
+  def t3: Boolean = routeTypeCheck(
     createToDos(cask.Request(null, Seq(""))),
-    TodoRoutes.newTodo.decode("")
+    TodoRoutes.newTodo.decodeResponse("")
   )
 
   @jsonApi(TodoRoutes.updateTodo)
@@ -76,9 +78,9 @@ trait ServerT extends cask.Routes {
     val td = read[Todos](request.text())
     myDB.updateTodo(td)
   }
-  def t4 = routeTypeCheck(
+  def t4: Boolean = routeTypeCheck(
     updateTodo(cask.Request(null, Seq(""))),
-    TodoRoutes.updateTodo.decode("")
+    TodoRoutes.updateTodo.decodeResponse("")
   )
 
   @cask.delete("/api/todo/:id")
@@ -91,23 +93,23 @@ trait ServerT extends cask.Routes {
     Seq("apple", "pear", "orange", "strawberries", "orangutan")
   @jsonApi(SuggestionRoutes.filterSuggestions)
   def suggest(request: cask.Request): Seq[String] = {
-    val req = SuggestionRoutes.filterSuggestions.paramReader.get(request.text())
+    val req = SuggestionRoutes.filterSuggestions.requestBodyReader.get(request.text())
     req.prefixOnly match {
       case Some(true) => sillySuggestions.filter(_.startsWith(req.search))
       case _          => sillySuggestions.filter(_.contains(req.search))
     }
 
   }
-  def t6 = routeTypeCheck(
+  def t6: Boolean = routeTypeCheck(
     suggest(cask.Request(null, Seq(""))),
-    SuggestionRoutes.filterSuggestions.decode("")
+    SuggestionRoutes.filterSuggestions.decodeResponse("")
   )
 
   @jsonApi(SuggestionRoutes.allSuggestions)
   def suggest(): Seq[String] = {
     sillySuggestions
   }
-  def t5 = routeTypeCheck(suggest(), SuggestionRoutes.allSuggestions.decode(""))
+  def t5: Boolean = routeTypeCheck(suggest(), SuggestionRoutes.allSuggestions.decodeResponse(""))
 
   class myStaticResources(val path: String, resourceRoot: ClassLoader = classOf[myStaticResources].getClassLoader, headers: Seq[(String, String)] = Nil)
       extends HttpEndpoint[String, Seq[String]] {
@@ -132,13 +134,13 @@ trait ServerT extends cask.Routes {
   }
 
   @myStaticResources("/search")
-  def searchUi() = "assets/Search.html"
+  def searchUi(): String = "assets/Search.html"
 
   @myStaticResources("/todo")
-  def todoUi() = "assets/Todo.html"
+  def todoUi(): String = "assets/Todo.html"
 
   @myStaticResources("/assets")
-  def staticResourceRoute() = "assets"
+  def staticResourceRoute(): String = "assets"
 
   initialize()
 }

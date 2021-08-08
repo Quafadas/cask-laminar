@@ -5,12 +5,12 @@ import com.raquo.airstream.core.Observer
 import com.raquo.airstream.web.AjaxEventStream
 import example.shared.Route
 import org.scalajs.dom
-import upickle.default.Writer
+import upickle.default.ReadWriter
 
 /*
  * Thbis is a bit of a kooky idea, that being the API is a pure function of the a "Route" case class.
  *
- * Would have the advantage of triviall subsituting data in for test routes...
+ * Would have the advantage of trivially subsituting data in for test routes...
  *
  * And not writing the API layer, which is dervied entirely from our (custom :-/) route definitions.
  */
@@ -32,7 +32,7 @@ trait RouteApiT {
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
       progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
-  )(implicit w: Writer[D]): EventStream[T] = ???
+  )(implicit w: ReadWriter[D], t : ReadWriter[T]): EventStream[T] = ???
 
   def pathSegmentedRoute[T, D](
       route: Route[T, D],
@@ -47,8 +47,8 @@ trait RouteApiT {
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
   )(
       replacePathSegemnts: String => String
-  )(implicit w: Writer[D]): EventStream[T] = {
-    val newRoute = route.copy(route = replacePathSegemnts(route.route))
+  )(implicit t: ReadWriter[T], d: ReadWriter[D]): EventStream[T] = {
+    val newRoute = route.copy[T,D](route = replacePathSegemnts(route.route))
     simpleRoute(
       newRoute,
       data,
@@ -72,7 +72,7 @@ object RouteApi extends RouteApiT {
     val request            = AjaxEventStream.initRequest()
     request.onreadystatechange = (_: dom.Event) => {
       if (request.readyState == 4 && request.status == 200) {
-        val decoded = route.decode(request.responseText)
+        val decoded = route.decodeResponse(request.responseText)
         println(decoded)
         callback(decoded)
       } else {
@@ -99,7 +99,7 @@ object RouteApi extends RouteApiT {
       requestObserver: Observer[dom.XMLHttpRequest] = Observer.empty,
       progressObserver: Observer[(dom.XMLHttpRequest, dom.ProgressEvent)] = Observer.empty,
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
-  )(implicit w: Writer[D]): EventStream[T] = {
+  )(implicit w: ReadWriter[D], t : ReadWriter[T]): EventStream[T] = {
     println(data)
     val result = new AjaxEventStream(
       route.method.toUpperCase(),
@@ -115,7 +115,7 @@ object RouteApi extends RouteApiT {
       readyStateChangeObserver
     ).map(req => {
       val t = req.responseText
-      route.decode(t)
+      route.decodeResponse(t)
     })
     result
   }
