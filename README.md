@@ -14,6 +14,18 @@ Then try http://localhost:8080/todo. You'll probably get errors if you didn't se
 
 Have a look at the DB folder in modules and the "application.conf" file to wire up postgres.
 
+## Real development mode
+Whilst the above works, and it's easy to get started... the feedback loop is too slow for frontend development. Let's split the workflow into frontend and backend. 
+
+1. Start two sbt shells
+2. In the first shell, "project backend" to switch to the backend project. 
+3. In the back project, ~reStart ... this will restart the backendn on any change
+4. In the second shell switch to the todo project "project todo"
+5. start a webpack dev server... we have a config laid out in the root of that project... "startWebpackDevServer"
+6. once webpack is up and running ~fastOptJS::webpack... and you should see all change reload without intervention in the browser on the frontend. 
+
+Note: The webpack config (which is being served on localhost:3000) proxies Ajax requests to port 8080, and assumes you have kept that as the backend port. 
+
 # cask-laminar-stack
 
 Example of laminar put on top of the so called "Singaporean stack". The aim is simplicitly... as far as possible inside the requirements of; 
