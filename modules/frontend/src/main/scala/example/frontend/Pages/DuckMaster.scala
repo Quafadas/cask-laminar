@@ -10,7 +10,7 @@ object DuckMaster {
 
     val summarySignal = counter.countSignal.map { count =>
       if (count <= 0) { "Out of ducks today" }
-      else if (count < 5) { "Duck colony stable"}
+      else if (count < 5) { "Duck colony stable" }
       else { "DUCKMAGEDDON IMMINENT!!!" }
     }
 
@@ -22,5 +22,3 @@ object DuckMaster {
     )
   }
 }
-
-

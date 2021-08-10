@@ -9,44 +9,43 @@ object ExampleRouter {
 
   sealed abstract class Page(val title: String)
 
-  case object HomePage extends Page("Home")
-  case object DuckCounterPage extends Page("Duck Counter")
+  case object HomePage                                      extends Page("Home")
+  case object DuckCounterPage                               extends Page("Duck Counter")
   case class FlexiCounterPage(countMe: String, amount: Int) extends Page("Flexi Route Counter")
-  case object TodoMvcPage extends Page("Todo MVC")  
+  case object TodoMvcPage                                   extends Page("Todo MVC")
 
-  implicit val HomePageRW: ReadWriter[HomePage.type] = macroRW
-  implicit val TodoMvcPageRW: ReadWriter[TodoMvcPage.type] = macroRW  
+  implicit val HomePageRW: ReadWriter[HomePage.type]               = macroRW
+  implicit val TodoMvcPageRW: ReadWriter[TodoMvcPage.type]         = macroRW
   implicit val DuckCounterPageRW: ReadWriter[DuckCounterPage.type] = macroRW
-  implicit val FlexiCounterPageRW: ReadWriter[FlexiCounterPage] = macroRW
+  implicit val FlexiCounterPageRW: ReadWriter[FlexiCounterPage]    = macroRW
 
   implicit val rw: ReadWriter[Page] = macroRW
 
   private val routes = List(
     Route.static(HomePage, root / endOfSegments, Router.localFragmentBasePath),
     Route.static(DuckCounterPage, root / "duck-counter" / endOfSegments, Router.localFragmentBasePath),
-     Route[FlexiCounterPage, (String, Int)](
-        encode = flexiPage => (flexiPage.countMe, flexiPage.amount),
-        decode = arg => FlexiCounterPage(arg._1, arg._2),
-         pattern = root / "flexi-counter" /  segment[String] / segment[Int] / endOfSegments, Router.localFragmentBasePath
-         ), 
-    Route.static(TodoMvcPage, root / "todo-mvc" / endOfSegments, Router.localFragmentBasePath),    
-    
+    Route[FlexiCounterPage, (String, Int)](
+      encode = flexiPage => (flexiPage.countMe, flexiPage.amount),
+      decode = arg => FlexiCounterPage(arg._1, arg._2),
+      pattern = root / "flexi-counter" / segment[String] / segment[Int] / endOfSegments,
+      Router.localFragmentBasePath
+    ),
+    Route.static(TodoMvcPage, root / "todo-mvc" / endOfSegments, Router.localFragmentBasePath)
   )
 
   val router = new Router[Page](
     routes = routes,
-    getPageTitle = _.title, // displayed in the browser tab next to favicon
-    serializePage = page => write(page)(rw), // serialize page data for storage in History API log
+    getPageTitle = _.title,                        // displayed in the browser tab next to favicon
+    serializePage = page => write(page)(rw),       // serialize page data for storage in History API log
     deserializePage = pageStr => read(pageStr)(rw) // deserialize the above
   )(
     $popStateEvent = windowEvents.onPopState, // this is how Waypoint avoids an explicit dependency on Laminar
-    owner = unsafeWindowOwner // this router will live as long as the window
+    owner = unsafeWindowOwner                 // this router will live as long as the window
   )
 
   // Note: for fragment ('#') URLs this isn't actually needed.
   // See https://github.com/raquo/Waypoint docs for why this modifier is useful in general.
   def navigateTo(page: Page): Binder[HtmlElement] = Binder { el =>
-
     val isLinkElement = el.ref.isInstanceOf[dom.html.Anchor]
 
     if (isLinkElement) {
@@ -60,7 +59,6 @@ object ExampleRouter {
     (onClick
       .filter(ev => !(isLinkElement && (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey)))
       .preventDefault
-      --> (_ => router.pushState(page))
-      ).bind(el)
+      --> (_ => router.pushState(page))).bind(el)
   }
 }

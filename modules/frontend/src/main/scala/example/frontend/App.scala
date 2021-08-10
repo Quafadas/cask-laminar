@@ -1,9 +1,10 @@
 package example.frontend
 
-import ExampleRouter._
 import com.raquo.laminar.api.L._
 import com.raquo.waypoint._
 import org.scalajs.dom
+
+import ExampleRouter._
 
 object App {
 
@@ -16,7 +17,7 @@ object App {
       div(
         child.maybe <-- ExampleRouter.router.$currentPage.map {
           case HomePage => None
-          case _ => Some(h3(a(navigateTo(HomePage), "Back to home")))
+          case _        => Some(h3(a(navigateTo(HomePage), "Back to home")))
         },
         child <-- $selectedApp.$view
       )
@@ -26,10 +27,10 @@ object App {
     renderOnDomContentLoaded(container, appElement)
   }
 
-  def renderFlexiPage($flexiPage : Signal[FlexiCounterPage]) : Div = {
-      div(
-       child <-- $flexiPage.map(page => FlexiRouteMaster(page.countMe, page.amount) )
-      )
+  def renderFlexiPage($flexiPage: Signal[FlexiCounterPage]): Div = {
+    div(
+      child <-- $flexiPage.map(page => FlexiRouteMaster(page.countMe, page.amount))
+    )
   }
 
   private val $selectedApp = SplitRender(ExampleRouter.router.$currentPage)
@@ -56,6 +57,6 @@ object App {
   val linkPages: List[Page] = List(
     DuckCounterPage,
     new FlexiCounterPage("test", 1),
-    TodoMvcPage    
+    TodoMvcPage
   )
 }

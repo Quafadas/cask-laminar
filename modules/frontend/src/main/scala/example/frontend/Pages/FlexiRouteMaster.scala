@@ -5,13 +5,12 @@ import example.frontend.components.Counter
 
 object FlexiRouteMaster {
 
-  def apply(countMe:String, amount : Int = 1): Div = {
+  def apply(countMe: String, amount: Int = 1): Div = {
     val counter = Counter(s"Number of $countMe", amount)
-
 
     val summarySignal = counter.countSignal.map { count =>
       if (count <= 0) { s"Out of $countMe today" }
-      else if (count < 5) { s"$countMe colony stable"}
+      else if (count < 5) { s"$countMe colony stable" }
       else { s"${countMe.toUpperCase()}MAGEDDON IMMINENT!!!" }
     }
 
@@ -23,5 +22,3 @@ object FlexiRouteMaster {
     )
   }
 }
-
-

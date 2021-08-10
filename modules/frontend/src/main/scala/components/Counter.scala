@@ -4,14 +4,12 @@ import com.raquo.laminar.api.L._
 import org.scalajs.dom
 
 class Counter private (
-  val countSignal: Signal[Int],
-  val node: Node
+    val countSignal: Signal[Int],
+    val node: Node
 )
 
-
-
 object Counter {
-  def apply(label: String, startValue:Int = 0): Counter = {
+  def apply(label: String, startValue: Int = 0): Counter = {
 
     val incClickBus = new EventBus[dom.MouseEvent]
     val decClickBus = new EventBus[dom.MouseEvent]
