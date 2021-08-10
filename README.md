@@ -45,7 +45,7 @@ The choices made...
 
 9. Simple examples of writing custom JS facades for Vega View.
 
-10. Vega Embed is sucked through Scalably typed
+10. Vega Embed is sucked in through Scalably typed
 
 11. Scala JS Bundler has a setup which allows "live reloading" in the "todo" project
 
@@ -56,8 +56,9 @@ Whilst the above works, and it's easy to get started... the feedback loop is too
 2. In the first shell, "project backend" to switch to the backend project. 
 3. In the back project, ~reStart ... this will restart the backend on any change
 4. In the second shell switch to the todo project "project todo"
-5. start a webpack dev server... we have a config laid out in the root of that project... "startWebpackDevServer"
+5. start a webpack dev server... we have a config laid out in the root of that project... in sbt type "webpack::startWebpackDevServer"
 6. once webpack is up and running ~fastOptJS::webpack... and you should see all change reload without intervention in the browser on the frontend. 
+7. if you wish to stop it... webpack::stopWebpackDevServer
 
 Note: The webpack config (which is being served on localhost:3000) proxies Ajax requests to port 8080/api, i.e. assumes you have kept that as the backend port, and have requests to the backend running through the "api" path. 
 

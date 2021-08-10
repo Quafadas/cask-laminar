@@ -14,7 +14,10 @@ val Dependencies = new {
 
   lazy val frontend = Seq(
     libraryDependencies ++=
-      Seq("com.raquo" %%% "laminar" % "0.13.1")
+      Seq(
+        "com.raquo" %%% "laminar" % "0.13.1",
+        "com.raquo" %%% "waypoint" % "0.4.2"
+      )
   )
 
   lazy val backend = Seq(
@@ -56,7 +59,7 @@ lazy val todo = (project in file("modules/frontend"))
     Compile / npmDependencies += "vega-embed"                 -> "6.18.2",
     Compile / npmDependencies += "vega"                       -> "5.19.1",
     Compile / npmDependencies += "vega-lite"                  -> "4.17.0",
-    Compile / npmDependencies += "vega-view"                  -> "5.10.1",
+    Compile / npmDependencies += "vega-view"                  -> "5.10.1",    
     Compile / npmDevDependencies += "html-webpack-plugin"     -> "4.0.0",
     Compile / npmDevDependencies += "style-loader"            -> "2.0.0",
     Compile / npmDevDependencies += "css-loader"              -> "5.0.1",
@@ -65,6 +68,9 @@ lazy val todo = (project in file("modules/frontend"))
     version in webpack := "4.46.0",
     version in startWebpackDevServer := "3.11.2",
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
+    Compile / fastOptJS / scalaJSLinkerConfig ~= { _.withSourceMap(false) },
+    Compile / fullOptJS / scalaJSLinkerConfig ~= { _.withSourceMap(false) },
+
     webpackEmitSourceMaps := false, // to keep compile / reload cycle fast
     webpackDevServerPort := 3000,
     webpackBundlingMode := BundlingMode.LibraryAndApplication(),
