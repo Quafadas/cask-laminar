@@ -6,7 +6,7 @@ import example.frontend.components.Counter
 object DuckMaster {
 
   def apply(): Div = {
-    val counter = Counter("Number of ducks")
+    val counter = Counter("Number of ducks", 0)
 
     val summarySignal = counter.countSignal.map { count =>
       if (count <= 0) { "Out of ducks today" }

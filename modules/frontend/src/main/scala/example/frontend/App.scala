@@ -27,16 +27,10 @@ object App {
     renderOnDomContentLoaded(container, appElement)
   }
 
-  def renderFlexiPage($flexiPage: Signal[FlexiCounterPage]): Div = {
-    div(
-      child <-- $flexiPage.map(page => FlexiRouteMaster(page.countMe, page.amount))
-    )
-  }
-
   private val $selectedApp = SplitRender(ExampleRouter.router.$currentPage)
     .collectStatic(HomePage)(renderHomePage())
     .collectStatic(TodoMvcPage)(TodoMvcApp())
-    .collectSignal[FlexiCounterPage]($flexiPage => renderFlexiPage($flexiPage))
+    .collectSignal[FlexiCounterPage](($flexi: Signal[FlexiCounterPage]) => FlexiRouteMaster($flexi))
     .collectStatic(DuckCounterPage)(DuckMaster())
 
   private def renderHomePage(): HtmlElement = {
