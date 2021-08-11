@@ -30,6 +30,6 @@ module.exports = WebApp;
 module.exports.plugins = [
   new HtmlWebpackPlugin({
     title: "cask-laminar",
-    template: '../../../../index.html'
+    template: '../../../../src/main/scala/resources/index.html'
   })
 ];

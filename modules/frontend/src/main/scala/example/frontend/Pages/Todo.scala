@@ -13,10 +13,17 @@ import org.scalajs.dom
 import webcomponents.vega.VegaView
 
 import annotation.unused
+import scala.scalajs.js.annotation.JSImport
+import scala.scalajs.js
+
+@js.native
+@JSImport("../../../../src/main/scala/resources/todo.css", JSImport.Namespace)
+object Css extends js.Object
+
 
 // Shamelessly pilfered from Laminar docs
 object TodoMvcApp {
-
+  @unused private val css = Css
   sealed abstract class Filter(val name: String, val passes: Todos => Boolean)
 
   object ShowAll extends Filter("All", _ => true)
