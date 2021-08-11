@@ -1,7 +1,9 @@
 package example.frontend
 
+import scala.scalajs.js
 import scala.scalajs.js.Dynamic
 import scala.scalajs.js.JSON
+import scala.scalajs.js.annotation.JSImport
 
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
@@ -13,13 +15,10 @@ import org.scalajs.dom
 import webcomponents.vega.VegaView
 
 import annotation.unused
-import scala.scalajs.js.annotation.JSImport
-import scala.scalajs.js
 
 @js.native
 @JSImport("../../../../src/main/scala/resources/todo.css", JSImport.Namespace)
 object Css extends js.Object
-
 
 // Shamelessly pilfered from Laminar docs
 object TodoMvcApp {
