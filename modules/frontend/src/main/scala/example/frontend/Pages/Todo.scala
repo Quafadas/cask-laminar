@@ -118,7 +118,7 @@ object TodoMvcApp {
     )
   }
 
-  private def renderViz(): ReactiveHtmlElement[org.scalajs.dom.html.Div] = {
+  private def renderViz(): Div = {
     div(
       idAttr := vizDivPieClass,
       updatePieVizStream.signal --> ({
@@ -152,7 +152,7 @@ object TodoMvcApp {
     )
   }
 
-  private def renderNewTodoInput: ReactiveHtmlElement[org.scalajs.dom.html.Input] =
+  private def renderNewTodoInput: Input =
     input(
       cls("new-todo"),
       placeholder("What needs to be done?"),
@@ -214,7 +214,7 @@ object TodoMvcApp {
       @unused $item: Signal[Todos],
       isEditingObserver: Observer[Boolean],
       editVar: Var[String]
-  ): ReactiveHtmlElement[org.scalajs.dom.html.Input] = {
+  ): Input = {
     input(
       cls("edit"),
       onMountFocus,
@@ -239,7 +239,7 @@ object TodoMvcApp {
   private def renderCheckboxInput(
       itemId: Int,
       $item: Signal[Todos]
-  ): ReactiveHtmlElement[org.scalajs.dom.html.Input] =
+  ): Input =
     input(
       cls("toggle"),
       typ("checkbox"),
@@ -256,7 +256,7 @@ object TodoMvcApp {
       }
     )
 
-  private def renderStatusBar: ReactiveHtmlElement[org.scalajs.dom.html.Element] =
+  private def renderStatusBar: Element =
     footer(
       hideIfNoItems,
       cls("footer"),
