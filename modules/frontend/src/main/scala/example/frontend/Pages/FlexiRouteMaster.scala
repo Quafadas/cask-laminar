@@ -12,17 +12,17 @@ object FlexiRouteMaster {
       else { s"${page.countMe.toUpperCase()}MAGEDDON IMMINENT!!!" }
     }
 
-    def increment(symbol: String, increment: Int, inPage: ExampleRouter.FlexiCounterPage) = a(
-      button(symbol, ExampleRouter.navigateTo(ExampleRouter.FlexiCounterPage(inPage.countMe, inPage.amount + increment)))
-    )
+    def pageIncrement(inPage: ExampleRouter.FlexiCounterPage, increment: Int) =
+      ExampleRouter.router.absoluteUrlForPage(ExampleRouter.FlexiCounterPage(inPage.countMe, inPage.amount + increment))
 
     div(
       h1(
         child.text <-- in.map { page => s"${page.countMe}Master 9000 dashboard" }
       ),
-      child <-- in.map(page => increment("-", -1, page)),
-      child <-- in.map(page => span(s" :: ${page.amount} (${page.countMe}) :: ")),
-      child <-- in.map(page => increment("+", 1, page)),
+      a(button("-"), href <-- in.map(inPage => pageIncrement(inPage, -1))),
+      //child <-- in.map(page => increment("-", -1, page)),
+      span(child.text <-- in.map(page => s" :: ${page.amount} (${page.countMe}) :: ")),
+      a(button("+"), href <-- in.map(inPage => pageIncrement(inPage, 1))),
       br(),
       br(),
       div(child.text <-- summarySignal)

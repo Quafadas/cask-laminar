@@ -10,7 +10,7 @@ And open http://localhost:8080/
 
 This will restart the server on any changes: shared code, and copy client assets to the right place. You should see "hello" if the server is working at the root url. It's pretty easy to see where that comes from :-). 
 
-Then try http://localhost:8080/todo. You'll probably get errors if you didn't setup the datsbase... 
+Then try http://localhost:8080/todo. You'll probably get errors if you didn't setup the database... 
 
 Have a look at the DB folder in modules and the "application.conf" file to wire up postgres.
 
@@ -25,13 +25,15 @@ Example of laminar put on top of the so called "Singaporean stack". The aim is s
 - JSON API
 - Shared client / server code
 
-The choices made...
+The choices made... and POC problems solved in this template.
 
 1. Client written (ahem, stolen, thanks raquo) with [Laminar](https://github.com/raquo/Laminar), interacting with server using laminars native Ajax integration
 
 2. Server with [cask](https://com-lihaoyi.github.io/cask/) serving both the compiled Javascript for the client and the classic CRUD api for server-side interactions for simple deployment / development
 
-3. Routing is via a questionable semi safe custom API concept - it's worked well for me. YMMV. Ideally, there would be tapir or endpoints4s... but none support cask... adding them added complexity against the principle above.
+3. Backend routing is via a questionable semi safe custom API concept - it's worked well for me. YMMV. Ideally, there would be tapir or endpoints4s... but none support cask... and adding them added complexity against the principle above.
+
+3. Part deux : Frontend routing via waypoint
 
 4. ScalaJS bundler for JS dependancies (Vega in this case)
 
