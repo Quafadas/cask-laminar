@@ -7,7 +7,6 @@ import org.ekrich.config.Config
 import org.ekrich.config.ConfigFactory
 import upickle.default._
 
-
 import annotation.unused
 // Split the object and trait so that the tests can have independant database implementations...
 object Server extends cask.MainRoutes with ServerT {
@@ -110,13 +109,13 @@ trait ServerT extends cask.Routes {
   @cask.get("/ui", subpath = true)
   def redirectMe() = {
     val f = scala.io.Source.fromFile("src/main/resources/assets/html/Index.html")
-    cask.Response(f.mkString(""), 200, Seq("Content-Type" -> "text/html"))    
+    cask.Response(f.mkString(""), 200, Seq("Content-Type" -> "text/html"))
   }
 
-  @cask.staticFiles("/assets/js",  headers = Seq("Content-Type" -> "text/javascript"))
+  @cask.staticFiles("/assets/js", headers = Seq("Content-Type" -> "text/javascript"))
   def staticJSRoute(): String = "src/main/resources/assets/js"
 
-  @cask.staticFiles("/assets/html",  headers = Seq("Content-Type" -> "text/html"))
+  @cask.staticFiles("/assets/html", headers = Seq("Content-Type" -> "text/html"))
   def staticHtmlRoute(): String = "src/main/resources/assets/html"
 
   initialize()

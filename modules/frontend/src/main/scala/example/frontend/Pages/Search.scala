@@ -5,10 +5,9 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import example.api.RouteApi
 import example.shared.GetSuggestions
 import example.shared.SuggestionRoutes
-import org.scalajs.dom
 
 //@JSExportTopLevel(name="Search") @JSExportAll
-object Search {  
+object Search {
 
   val searchBox: (StrictSignal[String], ReactiveHtmlElement[org.scalajs.dom.html.Input]) = {
     val zipVar           = Var("")
@@ -86,7 +85,7 @@ object Search {
   }
 
   //@JSExportTopLevel(name = "start", moduleID = "search")
-/*   def renderApp(): Unit = {
+  /*   def renderApp(): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), app())
     }(unsafeWindowOwner)

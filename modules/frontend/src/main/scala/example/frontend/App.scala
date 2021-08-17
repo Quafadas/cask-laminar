@@ -53,6 +53,6 @@ object App {
     DuckCounterPage,
     new FlexiCounterPage("test", 1),
     TodoMvcPage,
-    SearchPage,
+    SearchPage
   )
 }
