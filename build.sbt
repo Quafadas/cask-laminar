@@ -127,8 +127,8 @@ fastLinkCompileCopy := {
     )
   }
   IO.copyFile(
-    new File(s"""$backendDir/$assetPath/html/Todo_dev.html"""),
-    new File(s"""$backendDir/$assetPath/Todo.html""")
+    new File(s"""$backendDir/$assetPath/html/Index_dev.html"""),
+    new File(s"""$backendDir/$assetPath/Index.html""")
   )
 }
 

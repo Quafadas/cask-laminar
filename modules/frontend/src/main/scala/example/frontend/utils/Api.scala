@@ -16,6 +16,7 @@ import upickle.default.ReadWriter
  */
 trait RouteApiT {
 
+  val host = dom.window.location.origin
   /*
    * Should work for any route which doesn't have path segments in ... the method signature is unashamedly hauled
    * out of laminar source code...
@@ -101,9 +102,10 @@ object RouteApi extends RouteApiT {
       readyStateChangeObserver: Observer[dom.XMLHttpRequest] = Observer.empty
   )(implicit w: ReadWriter[D], t: ReadWriter[T]): EventStream[T] = {
     println(data)
+    println(route.route)
     val result = new AjaxEventStream(
       route.method.toUpperCase(),
-      route.route,
+      s"${host}/${route.route}",
       upickle.default.write(data),
       timeoutMs,
       headers,

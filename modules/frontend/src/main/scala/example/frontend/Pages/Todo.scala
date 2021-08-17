@@ -51,7 +51,7 @@ object TodoMvcApp {
     RouteApi.simpleRoute(TodoRoutes.listAllTodos).map(_.sortBy(_.todoId))
   private val itemsVar: Var[Seq[Todos]] = Var(Seq[Todos]())
 
-  def deleteStream(itemId: Int): EventStream[Int] =
+  def deleteStream(itemId: Int): EventStream[Long] =
     RouteApi.pathSegmentedRoute(TodoRoutes.deleteTodo, None) { (s: String) =>
       s.replace(":id", itemId.toString())
     }
@@ -81,7 +81,7 @@ object TodoMvcApp {
     .fromJsPromise(
       typings.vegaEmbed.mod.default(
         s"#$vizDivPieClass",
-        "api/pieSpec"
+        s"${RouteApi.host}/api/pieSpec"
       )
     )
     .toWeakSignal
@@ -284,7 +284,7 @@ object TodoMvcApp {
                     .map(_.todoId)
                 )
                   .map { s => println(s); s.map(deleteStream(_)) }
-                  .flatMap { (something: Seq[EventStream[Int]]) =>
+                  .flatMap { (something) =>
                     EventStream
                       .sequence(something)
                       .flatMap(_ => updateState())

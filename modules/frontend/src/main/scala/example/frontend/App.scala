@@ -30,6 +30,7 @@ object App {
   private val $selectedApp = SplitRender(ExampleRouter.router.$currentPage)
     .collectStatic(HomePage)(renderHomePage())
     .collectStatic(TodoMvcPage)(TodoMvcApp())
+    .collectStatic(SearchPage)(Search())
     .collectSignal[FlexiCounterPage](($flexi: Signal[FlexiCounterPage]) => FlexiRouteMaster($flexi))
     .collectStatic(DuckCounterPage)(DuckMaster())
 
@@ -51,6 +52,7 @@ object App {
   val linkPages: List[Page] = List(
     DuckCounterPage,
     new FlexiCounterPage("test", 1),
-    TodoMvcPage
+    TodoMvcPage,
+    SearchPage,
   )
 }

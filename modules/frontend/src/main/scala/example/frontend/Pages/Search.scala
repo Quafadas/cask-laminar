@@ -8,9 +8,7 @@ import example.shared.SuggestionRoutes
 import org.scalajs.dom
 
 //@JSExportTopLevel(name="Search") @JSExportAll
-object Search {
-
-  val ApiHost = example.api.ApiHost
+object Search {  
 
   val searchBox: (StrictSignal[String], ReactiveHtmlElement[org.scalajs.dom.html.Input]) = {
     val zipVar           = Var("")
@@ -40,8 +38,8 @@ object Search {
     )
   }
 
-  def app(debounce: Int = 250): ReactiveHtmlElement[org.scalajs.dom.html.Div] = {
-
+  def apply(): ReactiveHtmlElement[org.scalajs.dom.html.Div] = {
+    val debounce: Int = 250
     val debounced: Signal[(String, Boolean)] =
       if (debounce > 0)
         searchBox._1
@@ -88,9 +86,9 @@ object Search {
   }
 
   //@JSExportTopLevel(name = "start", moduleID = "search")
-  def renderApp(): Unit = {
+/*   def renderApp(): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), app())
     }(unsafeWindowOwner)
-  }
+  } */
 }

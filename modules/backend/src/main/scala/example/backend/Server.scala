@@ -1,15 +1,12 @@
 package example.backend
 
-import cask.endpoints.QueryParamReader
-import cask.endpoints.StaticUtil
-import cask.model.Request
 import cask.model.Response
-import cask.router.HttpEndpoint
 import cask.router.Result
 import example.shared._
 import org.ekrich.config.Config
 import org.ekrich.config.ConfigFactory
 import upickle.default._
+
 
 import annotation.unused
 // Split the object and trait so that the tests can have independant database implementations...
@@ -82,7 +79,7 @@ trait ServerT extends cask.Routes {
     TodoRoutes.updateTodo.decodeResponse("")
   )
 
-  @cask.delete("/api/todo/:id")
+  @jsonApi(TodoRoutes.deleteTodo)
   def deleteToDo(id: Int): Long = {
     println(s"got delete request for $id")
     myDB.deleteTodo(id)
@@ -110,36 +107,17 @@ trait ServerT extends cask.Routes {
   }
   def t5: Boolean = routeTypeCheck(suggest(), SuggestionRoutes.allSuggestions.decodeResponse(""))
 
-  class myStaticResources(val path: String, resourceRoot: ClassLoader = classOf[myStaticResources].getClassLoader, headers: Seq[(String, String)] = Nil)
-      extends HttpEndpoint[String, Seq[String]] {
-    val methods = Seq("get")
-    type InputParser[T] = QueryParamReader[T]
-    override def subpath = true
-
-    def wrapFunction(ctx: Request, delegate: Delegate) = {
-      delegate(Map()).map(t => {
-        println(ctx.remainingPathSegments.headOption)
-        val headersOut: Seq[(String, String)] = ctx.remainingPathSegments.headOption match {
-          case Some(s) if s.takeRight(2) == "js"   => Seq(("Content-Type", "text/javascript"))
-          case Some(s) if s.takeRight(3) == "css"  => Seq(("Content-Type", "text/css"))
-          case Some(s) if s.takeRight(4) == "html" => Seq(("Content-Type", "text/html"))
-          case _                                   => Nil
-        }
-        cask.model.StaticResource(StaticUtil.makePath(t, ctx), resourceRoot, headersOut)
-      })
-    }
-
-    def wrapPathSegment(s: String): Seq[String] = Seq(s)
+  @cask.get("/ui", subpath = true)
+  def redirectMe() = {
+    val f = scala.io.Source.fromFile("src/main/resources/assets/html/Index.html")
+    cask.Response(f.mkString(""), 200, Seq("Content-Type" -> "text/html"))    
   }
 
-  @myStaticResources("/search")
-  def searchUi(): String = "assets/Search.html"
+  @cask.staticFiles("/assets/js",  headers = Seq("Content-Type" -> "text/javascript"))
+  def staticJSRoute(): String = "src/main/resources/assets/js"
 
-  @myStaticResources("/todo")
-  def todoUi(): String = "assets/Todo.html"
-
-  @myStaticResources("/assets")
-  def staticResourceRoute(): String = "assets"
+  @cask.staticFiles("/assets/html",  headers = Seq("Content-Type" -> "text/html"))
+  def staticHtmlRoute(): String = "src/main/resources/assets/html"
 
   initialize()
 }

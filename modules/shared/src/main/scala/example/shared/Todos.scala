@@ -35,18 +35,18 @@ object TodoRoutes {
     "post",
     Some(read[Todos](_: String))
   )
-  val deleteTodo: Route[Int, Nothing] =
-    Route[Int, Nothing]("api/todo/:id", "delete")
+  val deleteTodo: Route[Long, Nothing] =
+    Route[Long, Nothing]("api/todo/:id", "delete")
 }
 
 object SuggestionRoutes {
   val allSuggestions: Route[Seq[String], Nothing] = Route[Seq[String], Nothing](
-    "/get-suggestions",
+    "api/get-suggestions",
     "get"
   )
   val filterSuggestions: Route[Seq[String], GetSuggestions.MyRequest] =
     Route[Seq[String], GetSuggestions.MyRequest](
-      "/get-suggestions",
+      "api/get-suggestions",
       "post",
       Some(read[GetSuggestions.MyRequest](_: String))
     )
