@@ -21,11 +21,11 @@ val Dependencies = new {
   )
 
   lazy val backend = Seq(
-    libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
-    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.9.0", // DB lib - https://getquill.io
+    libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.7.11",  // webserver  - https://github.com/com-lihaoyi/cask
+    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.9.0",   // DB lib - https://getquill.io
     libraryDependencies += "org.postgresql" % "postgresql" % "42.2.23", // Postgres driver, note the single %
-    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.4", // config - https://github.com/ekrich/sconfig
-    libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.6.9" // simple http library
+    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.4",   // config - https://github.com/ekrich/sconfig
+    libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.6.9"    // simple http library
   )
 
   lazy val shared = Def.settings(
@@ -40,9 +40,9 @@ val Dependencies = new {
 inThisBuild(
   Seq(
     scalafixDependencies += "com.github.liancheng" %% "organize-imports" % V.organiseImports,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
-    scalafixScalaBinaryVersion := V.ScalaGroup
+    semanticdbEnabled                              := true,
+    semanticdbVersion                              := scalafixSemanticdb.revision,
+    scalafixScalaBinaryVersion                     := V.ScalaGroup
   )
 )
 
@@ -65,20 +65,20 @@ lazy val todo = (project in file("modules/frontend"))
     Compile / npmDevDependencies += "css-loader"              -> "5.0.1",
     Compile / npmDevDependencies += "mini-css-extract-plugin" -> "1.3.4",
     Compile / npmDevDependencies += "webpack-merge"           -> "4.1.0",
-    version in webpack := "4.46.0",
-    version in startWebpackDevServer := "3.11.2",
+    version in webpack                                        := "4.46.0",
+    version in startWebpackDevServer                          := "3.11.2",
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     Compile / fastOptJS / scalaJSLinkerConfig ~= { _.withSourceMap(false) },
     Compile / fullOptJS / scalaJSLinkerConfig ~= { _.withSourceMap(false) },
-    webpackEmitSourceMaps := false, // to keep compile / reload cycle fast
-    webpackDevServerPort := 3000,
-    webpackBundlingMode := BundlingMode.LibraryAndApplication(),
+    webpackEmitSourceMaps     := false, // to keep compile / reload cycle fast
+    webpackDevServerPort      := 3000,
+    webpackBundlingMode       := BundlingMode.LibraryAndApplication(),
     webpackDevServerExtraArgs := Seq("--inline"),
-    webpackConfigFile := Some(baseDirectory.value / "webpack.config.js"),
+    webpackConfigFile         := Some(baseDirectory.value / "webpack.config.js"),
     stIgnore += "vega-view",
     scalaJSUseMainModuleInitializer := true,
-    requireJsDomEnv := true,
-    useYarn := true
+    requireJsDomEnv                 := true,
+    useYarn                         := true
   )
   .settings(commonBuildSettings)
 
