@@ -4,9 +4,12 @@ import upickle.default._
 
 /** An attempt at some sort of semi-safe routing concept between cask / laminar
   *
-  * @param route string that is appended to the root path to create the url of this route
-  * @param method http method, get post put etc
-  * @param requestBodyReader some calls will need to send data from the clientside to the server side. This tells the server how to decode the request body.
+  * @param route
+  *   string that is appended to the root path to create the url of this route
+  * @param method
+  *   http method, get post put etc
+  * @param requestBodyReader
+  *   some calls will need to send data from the clientside to the server side. This tells the server how to decode the request body.
   */
 case class Route[T, +D](
     route: String,

@@ -30,7 +30,7 @@ object Search {
     (
       checkVar,
       input(
-        typ := "checkbox",
+        typ            := "checkbox",
         defaultChecked := checkVar.now(),
         onInput.mapToChecked --> checkVar
       )
