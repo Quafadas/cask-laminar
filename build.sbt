@@ -23,7 +23,7 @@ val Dependencies = new {
   lazy val backend = Seq(
     libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
     libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.9.0", // DB lib - https://getquill.io
-    libraryDependencies += "org.postgresql" % "postgresql" % "42.2.23", // Postgres driver, note the single %
+    libraryDependencies += "org.postgresql" % "postgresql" % "42.2.24", // Postgres driver, note the single %
     libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.4", // config - https://github.com/ekrich/sconfig
     libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.6.9" // simple http library
   )
