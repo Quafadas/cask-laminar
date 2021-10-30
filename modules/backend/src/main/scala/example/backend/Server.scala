@@ -69,7 +69,7 @@ trait ServerT extends cask.Routes {
 
   @jsonApi(TodoRoutes.updateTodo)
   def updateTodo(request: cask.Request): Long = {
-    //println(request)
+    // println(request)
     val td = read[Todos](request.text())
     myDB.updateTodo(td)
   }
@@ -83,7 +83,7 @@ trait ServerT extends cask.Routes {
     println(s"got delete request for $id")
     myDB.deleteTodo(id)
   }
-  //----------------
+  // ----------------
   val sillySuggestions: Seq[String] =
     Seq("apple", "pear", "orange", "strawberries", "orangutan")
   @jsonApi(SuggestionRoutes.filterSuggestions)

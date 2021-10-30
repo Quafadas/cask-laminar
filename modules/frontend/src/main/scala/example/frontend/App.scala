@@ -38,7 +38,7 @@ object App {
     div(
       h1("Laminar Examples"),
       ul(
-        fontSize := "120%",
+        fontSize   := "120%",
         lineHeight := "2em",
         listStyleType.none,
         paddingLeft := "0px",

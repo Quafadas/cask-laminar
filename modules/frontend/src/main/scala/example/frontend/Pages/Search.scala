@@ -30,7 +30,7 @@ object Search {
     (
       checkVar,
       input(
-        typ := "checkbox",
+        typ            := "checkbox",
         defaultChecked := checkVar.now(),
         onInput.mapToChecked --> checkVar
       )
@@ -84,7 +84,7 @@ object Search {
     )
   }
 
-  //@JSExportTopLevel(name = "start", moduleID = "search")
+  // @JSExportTopLevel(name = "start", moduleID = "search")
   /*   def renderApp(): Unit = {
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(dom.document.getElementById("appContainer"), app())
