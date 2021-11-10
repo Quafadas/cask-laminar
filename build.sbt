@@ -5,7 +5,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {
   val Scala           = "2.13.6"
   val ScalaGroup      = "2.13"
-  val organiseImports = "0.5.0"
+  val organiseImports = "0.6.0"
 }
 
 scalaVersion := V.Scala
@@ -22,14 +22,14 @@ val Dependencies = new {
 
   lazy val backend = Seq(
     libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
-    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.9.0", // DB lib - https://getquill.io
+    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.10.0", // DB lib - https://getquill.io
     libraryDependencies += "org.postgresql" % "postgresql" % "42.2.23", // Postgres driver, note the single %
-    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.4", // config - https://github.com/ekrich/sconfig
+    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.5", // config - https://github.com/ekrich/sconfig
     libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.6.9" // simple http library
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "upickle" % "1.4.0" // for parsing things
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "1.4.2" // for parsing things
   )
 
   lazy val tests = Def.settings(
