@@ -5,7 +5,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {
   val Scala           = "2.13.6"
   val ScalaGroup      = "2.13"
-  val organiseImports = "0.5.0"
+  val organiseImports = "0.6.0"
 }
 
 scalaVersion := V.Scala
