@@ -4,7 +4,7 @@ addSbtPlugin("io.spray"                    % "sbt-revolver"             % "0.9.1
 addSbtPlugin("ch.epfl.scala"               % "sbt-scalajs-bundler"      % "0.20.0")
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter"            % "1.0.0-beta35")
 
-addSbtPlugin("org.scalameta"    % "sbt-scalafmt"        % "2.4.3")
+addSbtPlugin("org.scalameta"    % "sbt-scalafmt"        % "2.4.4")
 addSbtPlugin("com.github.sbt"   % "sbt-native-packager" % "1.9.6")
 addSbtPlugin("ch.epfl.scala"    % "sbt-scalafix"        % "0.9.30")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates"         % "0.6.0")
