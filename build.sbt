@@ -25,7 +25,7 @@ val Dependencies = new {
     libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.10.0", // DB lib - https://getquill.io
     libraryDependencies += "org.postgresql" % "postgresql" % "42.2.24", // Postgres driver, note the single %
     libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.5", // config - https://github.com/ekrich/sconfig
-    libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.6.9" // simple http library
+    libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.7.0" // simple http library
   )
 
   lazy val shared = Def.settings(
