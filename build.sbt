@@ -29,7 +29,7 @@ val Dependencies = new {
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "upickle" % "1.4.2" // for parsing things
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "1.4.4" // for parsing things
   )
 
   lazy val tests = Def.settings(
