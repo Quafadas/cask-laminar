@@ -33,7 +33,7 @@ val Dependencies = new {
   )
 
   lazy val tests = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.10" % Test
+    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.11" % Test
   )
 }
 
