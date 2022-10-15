@@ -3,7 +3,7 @@ import java.io.File
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {
-  val Scala           = "2.13.6"
+  val Scala           = "2.13.10"
   val ScalaGroup      = "2.13"
   val organiseImports = "0.6.0"
 }
