@@ -5,6 +5,7 @@ import com.raquo.waypoint._
 import org.scalajs.dom
 
 import ExampleRouter._
+import com.raquo.laminar.nodes.ReactiveHtmlElement
 
 object App {
 
@@ -12,6 +13,11 @@ object App {
 
     // This div, its id and contents are defined in index-fastopt.html and index-fullopt.html files
     lazy val container = dom.document.getElementById("appContainer")
+
+    val test: Signal[Option[ReactiveHtmlElement[org.scalajs.dom.html.Heading]]] = ExampleRouter.router.$currentPage.map {
+          case HomePage => None
+          case _        => Some(h3(a(navigateTo(HomePage), "Back to home")))
+        }
 
     lazy val appElement = {
       div(

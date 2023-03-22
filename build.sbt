@@ -3,7 +3,7 @@ import java.io.File
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {
-  val Scala           = "2.13.6"
+  val Scala           = "2.13.10"
   val ScalaGroup      = "2.13"
   val organiseImports = "0.6.0"
 }
@@ -15,25 +15,25 @@ val Dependencies = new {
   lazy val frontend = Seq(
     libraryDependencies ++=
       Seq(
-        "com.raquo" %%% "laminar"  % "0.13.1",
-        "com.raquo" %%% "waypoint" % "0.4.2"
+        "com.raquo" %%% "laminar"  % "15.0.0",
+        "com.raquo" %%% "waypoint" % "6.0.0"
       )
   )
 
   lazy val backend = Seq(
-    libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.7.11", // webserver  - https://github.com/com-lihaoyi/cask
-    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "3.10.0", // DB lib - https://getquill.io
-    libraryDependencies += "org.postgresql" % "postgresql" % "42.2.24", // Postgres driver, note the single %
-    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.4.5", // config - https://github.com/ekrich/sconfig
-    libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.6.9" // simple http library
+    libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.9.0", // webserver  - https://github.com/com-lihaoyi/cask
+    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "4.6.0", // DB lib - https://getquill.io
+    libraryDependencies += "org.postgresql" % "postgresql" % "42.6.0", // Postgres driver, note the single %
+    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.5.0", // config - https://github.com/ekrich/sconfig
+    libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.8.0" // simple http library
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "upickle" % "1.4.2" // for parsing things
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "3.0.0" // for parsing things
   )
 
   lazy val tests = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.10" % Test
+    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.8.1" % Test
   )
 }
 
@@ -65,7 +65,7 @@ lazy val todo = (project in file("modules/frontend"))
     Compile / npmDevDependencies += "css-loader"              -> "5.0.1",
     Compile / npmDevDependencies += "mini-css-extract-plugin" -> "1.3.4",
     Compile / npmDevDependencies += "webpack-merge"           -> "4.1.0",
-    version in webpack := "4.46.0",
+    version in webpack := "5.76.3",
     version in startWebpackDevServer := "3.11.2",
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     Compile / fastOptJS / scalaJSLinkerConfig ~= { _.withSourceMap(false) },

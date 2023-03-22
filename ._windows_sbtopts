@@ -1,5 +1,0 @@
--XX:+UseG1GC
--J-XX:+CMSClassUnloadingEnabled
--J-XX:+UseConcMarkSweepGC
--Xmx2g
--Xms1g

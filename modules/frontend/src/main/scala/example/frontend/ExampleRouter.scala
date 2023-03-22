@@ -44,7 +44,7 @@ object ExampleRouter {
     serializePage = page => write(page)(rw),       // serialize page data for storage in History API log
     deserializePage = pageStr => read(pageStr)(rw) // deserialize the above
   )(
-    $popStateEvent = windowEvents.onPopState, // this is how Waypoint avoids an explicit dependency on Laminar
+    $popStateEvent = windowEvents(_.onPopState), // this is how Waypoint avoids an explicit dependency on Laminar
     owner = unsafeWindowOwner                 // this router will live as long as the window
   )
 
