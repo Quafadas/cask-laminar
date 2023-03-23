@@ -9,6 +9,7 @@ project/metals.sbt
 .bsp
 .vscode
 .metals
+.DS_Store
 
 *.class
 
