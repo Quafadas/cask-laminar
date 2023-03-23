@@ -1,9 +1,11 @@
 package example.frontend
 
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L
 import com.raquo.waypoint._
 import org.scalajs.dom
 import upickle.default._
+import com.raquo.laminar.tags.HtmlTag
 
 object ExampleRouter {
 
@@ -44,8 +46,8 @@ object ExampleRouter {
     serializePage = page => write(page)(rw),       // serialize page data for storage in History API log
     deserializePage = pageStr => read(pageStr)(rw) // deserialize the above
   )(
-    $popStateEvent = windowEvents(_.onPopState), // this is how Waypoint avoids an explicit dependency on Laminar
-    owner = unsafeWindowOwner                 // this router will live as long as the window
+    popStateEvents = L.windowEvents(_.onPopState), // this is how Waypoint avoids an explicit dependency on Laminar
+    owner = L.unsafeWindowOwner                 // this router will live as long as the window
   )
 
   // Note: for fragment ('#') URLs this isn't actually needed.

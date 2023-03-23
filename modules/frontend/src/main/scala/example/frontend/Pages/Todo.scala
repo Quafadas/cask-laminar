@@ -5,6 +5,7 @@ import scala.scalajs.js.Dynamic
 import scala.scalajs.js.JSON
 import scala.scalajs.js.annotation.JSImport
 
+//import com.raquo.laminar.api.L
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import example.api.RouteApi
@@ -257,7 +258,7 @@ object TodoMvcApp {
     )
 
   private def renderStatusBar: Element =
-    footer(
+    footerTag(
       hideIfNoItems,
       cls("footer"),
       span(

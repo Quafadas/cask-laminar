@@ -14,18 +14,18 @@ object App {
     // This div, its id and contents are defined in index-fastopt.html and index-fullopt.html files
     lazy val container = dom.document.getElementById("appContainer")
 
-    val test: Signal[Option[ReactiveHtmlElement[org.scalajs.dom.html.Heading]]] = ExampleRouter.router.$currentPage.map {
+    val test: Signal[Option[ReactiveHtmlElement[org.scalajs.dom.html.Heading]]] = ExampleRouter.router.currentPageSignal.map {
           case HomePage => None
           case _        => Some(h3(a(navigateTo(HomePage), "Back to home")))
         }
 
     lazy val appElement = {
       div(
-        child.maybe <-- ExampleRouter.router.$currentPage.map {
+        child.maybe <-- ExampleRouter.router.currentPageSignal.map {
           case HomePage => None
           case _        => Some(h3(a(navigateTo(HomePage), "Back to home")))
         },
-        child <-- $selectedApp.$view
+        child <-- selectedApp.signal
       )
     }
 
@@ -33,7 +33,7 @@ object App {
     renderOnDomContentLoaded(container, appElement)
   }
 
-  private val $selectedApp = SplitRender(ExampleRouter.router.$currentPage)
+  private val selectedApp = SplitRender(ExampleRouter.router.currentPageSignal)
     .collectStatic(HomePage)(renderHomePage())
     .collectStatic(TodoMvcPage)(TodoMvcApp())
     .collectStatic(SearchPage)(Search())
