@@ -16,7 +16,7 @@ val Dependencies = new {
     libraryDependencies ++=
       Seq(
         "com.raquo" %%% "laminar"  % "16.0.0",
-        "com.raquo" %%% "waypoint" % "6.0.0"
+        "com.raquo" %%% "waypoint" % "7.0.0"
       )
   )
 
