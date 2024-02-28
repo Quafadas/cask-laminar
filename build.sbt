@@ -3,7 +3,7 @@ import java.io.File
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 val V = new {
-  val Scala           = "2.13.11"
+  val Scala           = "2.13.13"
   val ScalaGroup      = "2.13"
   val organiseImports = "0.6.0"
 }
@@ -21,19 +21,19 @@ val Dependencies = new {
   )
 
   lazy val backend = Seq(
-    libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.9.1", // webserver  - https://github.com/com-lihaoyi/cask
-    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "4.6.1", // DB lib - https://getquill.io
-    libraryDependencies += "org.postgresql" % "postgresql" % "42.6.0", // Postgres driver, note the single %
-    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.5.0", // config - https://github.com/ekrich/sconfig
+    libraryDependencies += "com.lihaoyi"   %% "cask"       % "0.9.2", // webserver  - https://github.com/com-lihaoyi/cask
+    libraryDependencies += "io.getquill"   %% "quill-jdbc" % "4.8.1", // DB lib - https://getquill.io
+    libraryDependencies += "org.postgresql" % "postgresql" % "42.6.1", // Postgres driver, note the single %
+    libraryDependencies += "org.ekrich"    %% "sconfig"    % "1.5.1", // config - https://github.com/ekrich/sconfig
     libraryDependencies += "com.lihaoyi"   %% "requests"   % "0.8.0" // simple http library
   )
 
   lazy val shared = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "upickle" % "3.1.2" // for parsing things
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "3.1.5" // for parsing things
   )
 
   lazy val tests = Def.settings(
-    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.8.1" % Test
+    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.8.2" % Test
   )
 }
 
